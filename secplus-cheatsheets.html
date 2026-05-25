@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sec+ SY0-701 Cheat Sheets</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3354;
+    --accent: #5b8dee;
+    --accent2: #e8564a;
+    --accent3: #4ecb71;
+    --accent4: #f0b429;
+    --accent5: #a56ef9;
+    --text: #e2e8f0;
+    --muted: #8892aa;
+    --tag-bg: #1e2a4a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; line-height: 1.6; }
+  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  header h1 { font-size: 18px; font-weight: 700; color: var(--accent); letter-spacing: .5px; }
+  header span { font-size: 12px; color: var(--muted); background: var(--tag-bg); padding: 4px 10px; border-radius: 20px; }
+  .nav { display: flex; gap: 6px; padding: 16px 24px 0; flex-wrap: wrap; }
+  .nav button { background: var(--surface); border: 1px solid var(--border); color: var(--muted); padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 12px; font-weight: 500; transition: all .2s; }
+  .nav button:hover, .nav button.active { color: #fff; border-color: var(--accent); background: var(--tag-bg); }
+  .nav button.active { background: var(--accent); border-color: var(--accent); }
+  .domain { display: none; padding: 20px 24px 40px; max-width: 1100px; }
+  .domain.active { display: block; }
+  .domain-header { margin-bottom: 20px; }
+  .domain-header h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+  .domain-header p { color: var(--muted); font-size: 13px; }
+  .pct-badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 12px; margin-left: 8px; vertical-align: middle; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+  .card h3 { font-size: 13px; font-weight: 700; color: var(--accent4); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 10px; }
+  .card ul { padding-left: 18px; }
+  .card li { color: var(--text); margin-bottom: 5px; font-size: 13px; }
+  .card li strong { color: var(--accent); }
+  .card p { font-size: 13px; color: var(--text); margin-bottom: 6px; }
+  .table-wrap { overflow-x: auto; margin-top: 8px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { background: var(--surface2); color: var(--accent); text-align: left; padding: 7px 10px; font-weight: 600; }
+  td { border-top: 1px solid var(--border); padding: 6px 10px; color: var(--text); vertical-align: top; }
+  tr:hover td { background: var(--surface2); }
+  .tag { display: inline-block; background: var(--tag-bg); color: var(--accent5); font-size: 11px; padding: 2px 8px; border-radius: 10px; margin: 2px 2px 2px 0; }
+  .tag.red { color: var(--accent2); background: #2d1a19; }
+  .tag.green { color: var(--accent3); background: #0f2318; }
+  .tag.blue { color: var(--accent); background: #0d1e3d; }
+  .tag.yellow { color: var(--accent4); background: #2a2009; }
+  .mnemonic { background: #1a2540; border-left: 3px solid var(--accent); padding: 10px 14px; border-radius: 0 8px 8px 0; margin-top: 8px; font-size: 13px; }
+  .mnemonic strong { color: var(--accent4); }
+  .wide { grid-column: 1 / -1; }
+  .sep { border-top: 1px solid var(--border); margin: 6px 0; }
+</style>
+</head>
+<body>
+<header>
+  <h1>CompTIA Security+ SY0-701 &mdash; Cheat Sheets</h1>
+  <span>Exam Prep 2024</span>
+</header>
+<div class="nav">
+  <button class="active" onclick="showDomain(0)">1. General Security (12%)</button>
+  <button onclick="showDomain(1)">2. Threats &amp; Vuln (22%)</button>
+  <button onclick="showDomain(2)">3. Architecture (18%)</button>
+  <button onclick="showDomain(3)">4. Operations (28%)</button>
+  <button onclick="showDomain(4)">5. Governance (20%)</button>
+</div>
+
+<!-- DOMAIN 1 -->
+<div class="domain active" id="d0">
+  <div class="domain-header">
+    <h2>Domain 1: General Security Concepts <span class="pct-badge" style="background:#1e2a4a;color:#5b8dee;">12%</span></h2>
+    <p>Security controls, cryptography basics, authentication, PKI, and key concepts</p>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h3>Security Control Categories</h3>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Category</th><th>Description</th><th>Example</th></tr>
+          <tr><td><strong>Technical</strong></td><td>Technology-based</td><td>Firewall, AV, encryption</td></tr>
+          <tr><td><strong>Managerial</strong></td><td>Policy/admin</td><td>Risk assessment, policy docs</td></tr>
+          <tr><td><strong>Operational</strong></td><td>People/process</td><td>Training, guards, background checks</td></tr>
+          <tr><td><strong>Physical</strong></td><td>Physical barriers</td><td>Locks, fences, badge readers</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Control Types (by Function)</h3>
+      <ul>
+        <li><strong>Preventive</strong> - Stop incident before it occurs (firewall, lock)</li>
+        <li><strong>Detective</strong> - Identify incident in progress (IDS, CCTV)</li>
+        <li><strong>Corrective</strong> - Fix after incident (patch, backups)</li>
+        <li><strong>Deterrent</strong> - Discourage attacks (warning signs, lighting)</li>
+        <li><strong>Compensating</strong> - Alternative when primary control unavailable</li>
+        <li><strong>Directive</strong> - Direct behavior (policies, training)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>CIA Triad + Extensions</h3>
+      <ul>
+        <li><strong>Confidentiality</strong> - Only authorized access (encryption, ACLs)</li>
+        <li><strong>Integrity</strong> - Data not modified (hashing, digital sigs)</li>
+        <li><strong>Availability</strong> - Systems accessible when needed (HA, backups)</li>
+        <li><strong>Non-repudiation</strong> - Cannot deny action (digital signatures, logs)</li>
+        <li><strong>Authentication</strong> - Verify identity</li>
+        <li><strong>Authorization</strong> - What you can do after auth</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Authentication Factors</h3>
+      <ul>
+        <li><strong>Something you know</strong> - Password, PIN</li>
+        <li><strong>Something you have</strong> - Smart card, token, phone</li>
+        <li><strong>Something you are</strong> - Biometrics (fingerprint, iris)</li>
+        <li><strong>Somewhere you are</strong> - Geolocation, IP range</li>
+        <li><strong>Something you do</strong> - Behavioral (typing pattern)</li>
+      </ul>
+      <div class="mnemonic"><strong>MFA</strong> = 2+ different factor types. Same type twice = not MFA.</div>
+    </div>
+    <div class="card">
+      <h3>Cryptography Basics</h3>
+      <ul>
+        <li><strong>Symmetric</strong> - Same key encrypt/decrypt (AES, 3DES). Fast. Key distribution problem.</li>
+        <li><strong>Asymmetric</strong> - Public/private key pair (RSA, ECC). Slower. Solves key distribution.</li>
+        <li><strong>Hashing</strong> - One-way, fixed output. Not encryption. (SHA-256, MD5 weak)</li>
+        <li><strong>Hybrid</strong> - Asymmetric to exchange symmetric key. Used in TLS.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Common Algorithms &amp; Key Sizes</h3>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Algorithm</th><th>Type</th><th>Key Size</th><th>Notes</th></tr>
+          <tr><td>AES</td><td>Symmetric</td><td>128/192/256</td><td>Current standard</td></tr>
+          <tr><td>3DES</td><td>Symmetric</td><td>112/168</td><td>Legacy, deprecated</td></tr>
+          <tr><td>RSA</td><td>Asymmetric</td><td>2048+</td><td>Key exchange, certs</td></tr>
+          <tr><td>ECC</td><td>Asymmetric</td><td>256+ (≈ RSA 3072)</td><td>Efficient, IoT</td></tr>
+          <tr><td>SHA-256</td><td>Hash</td><td>256-bit output</td><td>Use this</td></tr>
+          <tr><td>MD5</td><td>Hash</td><td>128-bit</td><td>Broken, avoid</td></tr>
+          <tr><td>SHA-1</td><td>Hash</td><td>160-bit</td><td>Deprecated</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <h3>PKI Concepts</h3>
+      <ul>
+        <li><strong>CA</strong> - Certificate Authority, issues/signs certs</li>
+        <li><strong>Root CA</strong> - Top of trust chain, offline recommended</li>
+        <li><strong>Intermediate CA</strong> - Issues end-entity certs, online</li>
+        <li><strong>CRL</strong> - Certificate Revocation List (batch)</li>
+        <li><strong>OCSP</strong> - Online Certificate Status Protocol (real-time)</li>
+        <li><strong>CSR</strong> - Certificate Signing Request</li>
+        <li><strong>Wildcard cert</strong> - *.domain.com (one domain, all subdomains)</li>
+        <li><strong>SAN cert</strong> - Multiple different domains</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Common Ports (Must Know)</h3>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Port</th><th>Protocol</th><th>Notes</th></tr>
+          <tr><td>20/21</td><td>FTP</td><td>Data/Control. Unencrypted</td></tr>
+          <tr><td>22</td><td>SSH / SFTP / SCP</td><td>Encrypted shell & file transfer</td></tr>
+          <tr><td>23</td><td>Telnet</td><td>Unencrypted. Replace w/ SSH</td></tr>
+          <tr><td>25</td><td>SMTP</td><td>Email sending</td></tr>
+          <tr><td>53</td><td>DNS</td><td>UDP (queries) / TCP (zone xfr)</td></tr>
+          <tr><td>67/68</td><td>DHCP</td><td>Server/Client</td></tr>
+          <tr><td>80</td><td>HTTP</td><td>Unencrypted web</td></tr>
+          <tr><td>110</td><td>POP3</td><td>Email retrieval</td></tr>
+          <tr><td>143</td><td>IMAP</td><td>Email retrieval (folders)</td></tr>
+          <tr><td>389</td><td>LDAP</td><td>Directory services</td></tr>
+          <tr><td>443</td><td>HTTPS</td><td>TLS-encrypted web</td></tr>
+          <tr><td>445</td><td>SMB</td><td>Windows file sharing</td></tr>
+          <tr><td>636</td><td>LDAPS</td><td>LDAP over TLS</td></tr>
+          <tr><td>993</td><td>IMAPS</td><td>IMAP over TLS</td></tr>
+          <tr><td>995</td><td>POP3S</td><td>POP3 over TLS</td></tr>
+          <tr><td>1433</td><td>MSSQL</td><td>Microsoft SQL Server</td></tr>
+          <tr><td>3306</td><td>MySQL</td><td>MySQL database</td></tr>
+          <tr><td>3389</td><td>RDP</td><td>Remote Desktop</td></tr>
+          <tr><td>8080</td><td>HTTP Alt</td><td>Web proxy / dev</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Zero Trust Principles</h3>
+      <ul>
+        <li>Never trust, always verify</li>
+        <li>Assume breach — segment everything</li>
+        <li><strong>Least privilege</strong> access at all times</li>
+        <li>Verify explicitly — use all data signals (ID, location, device health)</li>
+        <li>Micro-segmentation — limit blast radius</li>
+        <li>Continuous monitoring and validation</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Key Terms</h3>
+      <ul>
+        <li><strong>AAA</strong> - Authentication, Authorization, Accounting</li>
+        <li><strong>SSO</strong> - Single Sign-On</li>
+        <li><strong>SAML</strong> - XML-based SSO (enterprise)</li>
+        <li><strong>OAuth 2.0</strong> - Authorization delegation</li>
+        <li><strong>OpenID Connect</strong> - Auth layer on OAuth</li>
+        <li><strong>RADIUS</strong> - AAA for network access (UDP 1812/1813)</li>
+        <li><strong>TACACS+</strong> - Cisco AAA, TCP 49, full encryption</li>
+        <li><strong>Kerberos</strong> - Ticket-based auth (port 88)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- DOMAIN 2 -->
+<div class="domain" id="d1">
+  <div class="domain-header">
+    <h2>Domain 2: Threats, Vulnerabilities &amp; Mitigations <span class="pct-badge" style="background:#2d1a19;color:#e8564a;">22%</span></h2>
+    <p>Attack types, malware, social engineering, vulnerability management</p>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h3>Social Engineering Attacks</h3>
+      <ul>
+        <li><strong>Phishing</strong> - Mass email luring victims</li>
+        <li><strong>Spear phishing</strong> - Targeted phishing (specific person)</li>
+        <li><strong>Whaling</strong> - Phishing targeting executives (C-suite)</li>
+        <li><strong>Vishing</strong> - Voice phishing (phone calls)</li>
+        <li><strong>Smishing</strong> - SMS phishing</li>
+        <li><strong>Pretexting</strong> - Fabricated scenario to extract info</li>
+        <li><strong>Baiting</strong> - Leaving infected USB drives</li>
+        <li><strong>Quid pro quo</strong> - Something for something (fake IT help)</li>
+        <li><strong>Tailgating/Piggybacking</strong> - Following into restricted area</li>
+        <li><strong>Business Email Compromise (BEC)</strong> - Impersonate exec, wire fraud</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Malware Types</h3>
+      <ul>
+        <li><strong>Virus</strong> - Attaches to file, needs user to run</li>
+        <li><strong>Worm</strong> - Self-replicating, spreads without user (network)</li>
+        <li><strong>Trojan</strong> - Disguised as legit software</li>
+        <li><strong>Ransomware</strong> - Encrypts data, demands ransom</li>
+        <li><strong>Spyware</strong> - Collects info covertly</li>
+        <li><strong>Adware</strong> - Unwanted ads</li>
+        <li><strong>Rootkit</strong> - Hides malware, root/kernel level</li>
+        <li><strong>Keylogger</strong> - Records keystrokes</li>
+        <li><strong>Backdoor/RAT</strong> - Persistent remote access</li>
+        <li><strong>Fileless malware</strong> - Lives in memory/registry, no file on disk</li>
+        <li><strong>Botnet</strong> - Network of infected machines (zombies)</li>
+        <li><strong>Logic bomb</strong> - Triggers on condition (date, event)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Network Attacks</h3>
+      <ul>
+        <li><strong>DoS</strong> - Overwhelm with traffic from one source</li>
+        <li><strong>DDoS</strong> - Distributed, multiple sources (botnet)</li>
+        <li><strong>Smurf</strong> - Amplified ICMP broadcast</li>
+        <li><strong>SYN flood</strong> - Exploit TCP 3-way handshake</li>
+        <li><strong>Ping of Death</strong> - Oversized ICMP packet</li>
+        <li><strong>MITM</strong> - Intercept communications</li>
+        <li><strong>ARP poisoning</strong> - Fake ARP, redirect traffic (Layer 2 MITM)</li>
+        <li><strong>DNS poisoning</strong> - Corrupt DNS cache</li>
+        <li><strong>SSL stripping</strong> - Downgrade HTTPS to HTTP</li>
+        <li><strong>Replay attack</strong> - Reuse captured valid data</li>
+        <li><strong>On-path attack</strong> - New name for MITM</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Application Attacks</h3>
+      <ul>
+        <li><strong>SQLi</strong> - Inject SQL into input fields. Mitigation: parameterized queries</li>
+        <li><strong>XSS</strong> - Inject scripts into web page. Types: stored, reflected, DOM</li>
+        <li><strong>CSRF</strong> - Trick user browser to send unauthorized request</li>
+        <li><strong>SSRF</strong> - Force server to make internal requests</li>
+        <li><strong>Directory traversal</strong> - ../ to access unauthorized files</li>
+        <li><strong>Buffer overflow</strong> - Write beyond allocated memory</li>
+        <li><strong>IDOR</strong> - Insecure Direct Object Reference</li>
+        <li><strong>Race condition</strong> - TOCTOU (Time-of-Check/Time-of-Use)</li>
+        <li><strong>Injection</strong> - SQL, LDAP, command, XML injection</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Cryptographic Attacks</h3>
+      <ul>
+        <li><strong>Birthday attack</strong> - Exploit hash collisions</li>
+        <li><strong>Rainbow table</strong> - Precomputed hash lookups. Mitigate: salting</li>
+        <li><strong>Brute force</strong> - Try all combinations</li>
+        <li><strong>Dictionary attack</strong> - Try common words/passwords</li>
+        <li><strong>Pass-the-hash</strong> - Reuse captured hash without cracking</li>
+        <li><strong>Downgrade attack</strong> - Force weaker cipher/protocol</li>
+        <li><strong>Side-channel</strong> - Exploit physical info (timing, power)</li>
+        <li><strong>Padding oracle</strong> - CBC mode vulnerability</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Vulnerability Concepts</h3>
+      <ul>
+        <li><strong>Zero-day</strong> - No patch available yet</li>
+        <li><strong>CVE</strong> - Common Vulnerabilities &amp; Exposures (ID system)</li>
+        <li><strong>CVSS</strong> - Common Vulnerability Scoring System (0-10)</li>
+        <li><strong>NVD</strong> - National Vulnerability Database</li>
+        <li><strong>Vulnerability scan</strong> - Non-intrusive, find known vulns</li>
+        <li><strong>Penetration test</strong> - Active exploitation attempt</li>
+        <li><strong>Bug bounty</strong> - Reward for responsible disclosure</li>
+        <li><strong>Responsible disclosure</strong> - Notify vendor before public</li>
+        <li><strong>Full disclosure</strong> - Release publicly without notifying vendor</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Threat Intelligence</h3>
+      <ul>
+        <li><strong>OSINT</strong> - Open-source intelligence (public data)</li>
+        <li><strong>IoC</strong> - Indicator of Compromise (IP, hash, domain)</li>
+        <li><strong>IoA</strong> - Indicator of Attack (TTPs, behavior)</li>
+        <li><strong>STIX</strong> - Structured Threat Info eXpression (format)</li>
+        <li><strong>TAXII</strong> - Transport protocol for STIX data</li>
+        <li><strong>MITRE ATT&amp;CK</strong> - Framework of adversary TTPs</li>
+        <li><strong>TTP</strong> - Tactics, Techniques, Procedures</li>
+        <li><strong>Threat hunting</strong> - Proactive search for hidden threats</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Threat Actors</h3>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Actor</th><th>Motivation</th><th>Sophistication</th></tr>
+          <tr><td>Nation-state (APT)</td><td>Espionage, disruption</td><td>Very high</td></tr>
+          <tr><td>Organized crime</td><td>Financial gain</td><td>High</td></tr>
+          <tr><td>Hacktivist</td><td>Political/ideological</td><td>Medium</td></tr>
+          <tr><td>Script kiddie</td><td>Notoriety, fun</td><td>Low</td></tr>
+          <tr><td>Insider threat</td><td>Varied (revenge, $)</td><td>Varies</td></tr>
+          <tr><td>Shadow IT</td><td>Convenience</td><td>Unintentional</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="card wide">
+      <h3>Attack Frameworks &amp; Kill Chain</h3>
+      <p><strong>Cyber Kill Chain (Lockheed Martin):</strong> Recon → Weaponize → Deliver → Exploit → Install → C2 → Actions on Objectives</p>
+      <p style="margin-top:8px"><strong>MITRE ATT&amp;CK Tactics (in order):</strong> Recon, Resource Dev, Initial Access, Execution, Persistence, Privilege Escalation, Defense Evasion, Credential Access, Discovery, Lateral Movement, Collection, C2, Exfiltration, Impact</p>
+      <div class="mnemonic" style="margin-top:8px"><strong>Kill Chain mnemonic:</strong> <strong>R</strong>eally <strong>W</strong>icked <strong>D</strong>emons <strong>E</strong>at <strong>I</strong>nnocent <strong>C</strong>ats <strong>A</strong>live = Recon, Weaponize, Deliver, Exploit, Install, C2, Actions</div>
+    </div>
+  </div>
+</div>
+
+<!-- DOMAIN 3 -->
+<div class="domain" id="d2">
+  <div class="domain-header">
+    <h2>Domain 3: Security Architecture <span class="pct-badge" style="background:#0f2318;color:#4ecb71;">18%</span></h2>
+    <p>Network security, cloud, virtualization, secure infrastructure design</p>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h3>Network Segmentation</h3>
+      <ul>
+        <li><strong>DMZ</strong> - Demilitarized zone; public-facing servers between two firewalls</li>
+        <li><strong>VLAN</strong> - Virtual LAN; logical segmentation (Layer 2)</li>
+        <li><strong>Micro-segmentation</strong> - Fine-grained, per-workload; used in SDN/cloud</li>
+        <li><strong>Air gap</strong> - Physical isolation; no network connection</li>
+        <li><strong>Extranet</strong> - Private network extended to partners</li>
+        <li><strong>Intranet</strong> - Internal-only network</li>
+        <li><strong>East-West traffic</strong> - Lateral (server to server)</li>
+        <li><strong>North-South traffic</strong> - In/out of data center</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Firewall Types</h3>
+      <ul>
+        <li><strong>Packet filtering</strong> - Layer 3/4; checks IP/port; stateless</li>
+        <li><strong>Stateful</strong> - Tracks connection state; most common</li>
+        <li><strong>Application/Proxy</strong> - Layer 7; deep inspection; understands protocols</li>
+        <li><strong>NGFW</strong> - Next-gen; combines stateful + IPS + app awareness + user ID</li>
+        <li><strong>WAF</strong> - Web Application Firewall; HTTP/S traffic; stops SQLi, XSS</li>
+        <li><strong>Host-based FW</strong> - Software on the endpoint</li>
+        <li><strong>UTM</strong> - Unified Threat Mgmt; all-in-one (SMB)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>IDS vs IPS</h3>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Feature</th><th>IDS</th><th>IPS</th></tr>
+          <tr><td>Action</td><td>Alert only</td><td>Block + alert</td></tr>
+          <tr><td>Placement</td><td>Out-of-band (SPAN port)</td><td>Inline</td></tr>
+          <tr><td>Risk</td><td>False negative = miss</td><td>False positive = block legit</td></tr>
+        </table>
+      </div>
+      <ul style="margin-top:8px">
+        <li><strong>Signature-based</strong> - Match known patterns; low FP, misses new attacks</li>
+        <li><strong>Anomaly/heuristic</strong> - Baseline deviation; catches new, higher FP</li>
+        <li><strong>Behavior-based</strong> - Watch actions over time</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>VPN Types</h3>
+      <ul>
+        <li><strong>Remote access VPN</strong> - Client to site (IPSec or SSL/TLS)</li>
+        <li><strong>Site-to-site VPN</strong> - Gateway to gateway</li>
+        <li><strong>Split tunnel</strong> - Only some traffic goes through VPN</li>
+        <li><strong>Full tunnel</strong> - All traffic through VPN</li>
+        <li><strong>SSL VPN</strong> - Uses TLS; browser or client; port 443</li>
+        <li><strong>IPSec</strong> - Tunnel or transport mode; AH or ESP</li>
+        <li><strong>Always-on VPN</strong> - Connects automatically (modern Zero Trust)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Cloud Service Models</h3>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Model</th><th>You manage</th><th>Provider manages</th></tr>
+          <tr><td>IaaS</td><td>OS, runtime, apps, data</td><td>Hardware, network, hypervisor</td></tr>
+          <tr><td>PaaS</td><td>Apps, data</td><td>OS, runtime, infrastructure</td></tr>
+          <tr><td>SaaS</td><td>Data, users</td><td>Everything else</td></tr>
+          <tr><td>FaaS</td><td>Function code</td><td>All infrastructure</td></tr>
+        </table>
+      </div>
+      <div class="mnemonic"><strong>Shared responsibility</strong>: Security OF the cloud (provider) vs security IN the cloud (you)</div>
+    </div>
+    <div class="card">
+      <h3>Cloud Deployment Models</h3>
+      <ul>
+        <li><strong>Public</strong> - Multi-tenant, internet (AWS, Azure, GCP)</li>
+        <li><strong>Private</strong> - Single org, on-prem or hosted</li>
+        <li><strong>Hybrid</strong> - Mix of public + private</li>
+        <li><strong>Community</strong> - Shared by orgs with common interests</li>
+        <li><strong>Multi-cloud</strong> - Using 2+ cloud providers</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Virtualization &amp; Containers</h3>
+      <ul>
+        <li><strong>Hypervisor Type 1</strong> - Bare metal (VMware ESXi, Hyper-V)</li>
+        <li><strong>Hypervisor Type 2</strong> - Runs on OS (VirtualBox, VMware Workstation)</li>
+        <li><strong>VM escape</strong> - Attack breaks out of VM to host</li>
+        <li><strong>Container</strong> - Lightweight, shares OS kernel (Docker)</li>
+        <li><strong>Container escape</strong> - Break out of container</li>
+        <li><strong>Serverless</strong> - No server management; event-driven (Lambda)</li>
+        <li><strong>Snapshot</strong> - Point-in-time copy of VM state</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Wireless Security</h3>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Protocol</th><th>Encryption</th><th>Auth</th><th>Status</th></tr>
+          <tr><td>WEP</td><td>RC4</td><td>Weak</td><td class="tag red">Broken</td></tr>
+          <tr><td>WPA</td><td>TKIP</td><td>PSK</td><td class="tag red">Weak</td></tr>
+          <tr><td>WPA2</td><td>AES/CCMP</td><td>PSK/Enterprise</td><td class="tag yellow">OK</td></tr>
+          <tr><td>WPA3</td><td>AES/GCMP</td><td>SAE</td><td class="tag green">Current</td></tr>
+        </table>
+      </div>
+      <ul style="margin-top:8px">
+        <li><strong>Enterprise mode</strong> - Uses 802.1X + RADIUS server</li>
+        <li><strong>Evil twin</strong> - Rogue AP mimicking legit</li>
+        <li><strong>Deauth attack</strong> - Kick clients off to capture handshake</li>
+        <li><strong>SSID cloaking</strong> - Hide network name (security through obscurity)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Secure Protocols (Use These)</h3>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Instead of</th><th>Use</th><th>Why</th></tr>
+          <tr><td>Telnet (23)</td><td>SSH (22)</td><td>Encrypted</td></tr>
+          <tr><td>FTP (21)</td><td>SFTP/FTPS (22/990)</td><td>Encrypted</td></tr>
+          <tr><td>HTTP (80)</td><td>HTTPS (443)</td><td>TLS</td></tr>
+          <tr><td>SNMP v1/v2</td><td>SNMPv3</td><td>Auth + encryption</td></tr>
+          <tr><td>LDAP (389)</td><td>LDAPS (636)</td><td>TLS</td></tr>
+          <tr><td>RDP plain</td><td>RDP + NLA</td><td>Auth before session</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Load Balancing &amp; HA</h3>
+      <ul>
+        <li><strong>Active-Active</strong> - Both nodes handle traffic simultaneously</li>
+        <li><strong>Active-Passive</strong> - One active, one standby; failover only</li>
+        <li><strong>Round-robin</strong> - Rotate requests evenly</li>
+        <li><strong>Least connection</strong> - Send to server with fewest connections</li>
+        <li><strong>RTO</strong> - Recovery Time Objective (how long to recover)</li>
+        <li><strong>RPO</strong> - Recovery Point Objective (how much data loss tolerable)</li>
+        <li><strong>MTTR</strong> - Mean Time To Repair</li>
+        <li><strong>MTBF</strong> - Mean Time Between Failures</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- DOMAIN 4 -->
+<div class="domain" id="d3">
+  <div class="domain-header">
+    <h2>Domain 4: Security Operations <span class="pct-badge" style="background:#2a2009;color:#f0b429;">28%</span></h2>
+    <p>Incident response, digital forensics, monitoring, IAM, endpoint security</p>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h3>Incident Response Process</h3>
+      <ul>
+        <li><strong>1. Preparation</strong> - Policies, tools, training, IR plan</li>
+        <li><strong>2. Identification</strong> - Detect and confirm incident</li>
+        <li><strong>3. Containment</strong> - Limit spread (short-term + long-term)</li>
+        <li><strong>4. Eradication</strong> - Remove malware, close attack vector</li>
+        <li><strong>5. Recovery</strong> - Restore systems, verify normal operations</li>
+        <li><strong>6. Lessons Learned</strong> - Post-incident review, improve defenses</li>
+      </ul>
+      <div class="mnemonic"><strong>PICERL</strong>: Preparation, Identification, Containment, Eradication, Recovery, Lessons</div>
+    </div>
+    <div class="card">
+      <h3>Digital Forensics Principles</h3>
+      <ul>
+        <li><strong>Order of volatility</strong> - Collect most volatile first: CPU/RAM → Swap → Disk → Logs → Archived media</li>
+        <li><strong>Chain of custody</strong> - Document who handled evidence and when</li>
+        <li><strong>Legal hold</strong> - Preserve data for litigation</li>
+        <li><strong>Write blocker</strong> - Prevent modifying evidence disk</li>
+        <li><strong>Forensic copy</strong> - Bit-for-bit image (dd, FTK Imager)</li>
+        <li><strong>Hash verification</strong> - MD5/SHA to prove integrity of copy</li>
+        <li><strong>Locard's principle</strong> - Every contact leaves a trace</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Log &amp; Monitoring Tools</h3>
+      <ul>
+        <li><strong>SIEM</strong> - Security Info &amp; Event Mgmt; aggregate, correlate logs (Splunk, QRadar)</li>
+        <li><strong>SOAR</strong> - Security Orchestration, Automation &amp; Response; automate playbooks</li>
+        <li><strong>Syslog</strong> - Standard log forwarding (UDP 514)</li>
+        <li><strong>NetFlow</strong> - Network traffic metadata (no payload)</li>
+        <li><strong>PCAP</strong> - Packet capture (full content); Wireshark</li>
+        <li><strong>NXlog / Beats</strong> - Log shippers</li>
+        <li><strong>EDR</strong> - Endpoint Detection &amp; Response; behavioral monitoring on endpoint</li>
+        <li><strong>XDR</strong> - Extended DR; correlates across endpoint, network, cloud</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Identity &amp; Access Management</h3>
+      <ul>
+        <li><strong>DAC</strong> - Discretionary: owner sets permissions (NTFS)</li>
+        <li><strong>MAC</strong> - Mandatory: system enforces labels (Top Secret, etc.)</li>
+        <li><strong>RBAC</strong> - Role-based: permissions by job role</li>
+        <li><strong>ABAC</strong> - Attribute-based: dynamic rules on attributes</li>
+        <li><strong>PBAC</strong> - Policy-based: similar to ABAC</li>
+        <li><strong>Rule-based AC</strong> - Static rules (firewall ACLs)</li>
+        <li><strong>Least privilege</strong> - Minimum needed to do job</li>
+        <li><strong>Separation of duties</strong> - Split critical tasks among multiple people</li>
+        <li><strong>Dual control</strong> - Two people required simultaneously</li>
+        <li><strong>Job rotation</strong> - Rotate roles to detect fraud</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Account Management</h3>
+      <ul>
+        <li><strong>Provisioning</strong> - Create/grant accounts</li>
+        <li><strong>Deprovisioning</strong> - Remove when employee leaves (critical!)</li>
+        <li><strong>Recertification</strong> - Periodic review of access rights</li>
+        <li><strong>Privileged accounts</strong> - Admin/root; monitor closely</li>
+        <li><strong>PAM</strong> - Privileged Access Management; vault for admin creds</li>
+        <li><strong>Service accounts</strong> - Non-human; applications</li>
+        <li><strong>Shared accounts</strong> - Avoid; no individual accountability</li>
+        <li><strong>Time-of-day restrictions</strong> - Limit when accounts can log in</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Endpoint Security</h3>
+      <ul>
+        <li><strong>AV/Anti-malware</strong> - Signature + heuristic detection</li>
+        <li><strong>EDR</strong> - Continuous monitoring, behavioral analysis</li>
+        <li><strong>DLP</strong> - Data Loss Prevention; stop data exfiltration</li>
+        <li><strong>HIDS</strong> - Host-based IDS</li>
+        <li><strong>FIM</strong> - File Integrity Monitoring (tripwire)</li>
+        <li><strong>Application whitelisting</strong> - Only approved apps can run</li>
+        <li><strong>Patch management</strong> - Keep systems updated</li>
+        <li><strong>Mobile MDM/MAM</strong> - Mobile Device/App Management</li>
+        <li><strong>Sandboxing</strong> - Isolate unknown code</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Secure Data Destruction</h3>
+      <ul>
+        <li><strong>Degaussing</strong> - Strong magnetic field; destroys magnetic media</li>
+        <li><strong>Shredding/Pulverizing</strong> - Physical destruction</li>
+        <li><strong>Overwriting</strong> - Write patterns over data (DoD 5220.22-M)</li>
+        <li><strong>Crypto-shredding</strong> - Destroy encryption key (cloud/SSD best practice)</li>
+        <li><strong>Incineration</strong> - Burn it</li>
+        <li><strong>Sanitization vs Destruction</strong> - Sanitize = reuse possible; Destroy = not reusable</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Backup &amp; Recovery</h3>
+      <ul>
+        <li><strong>Full backup</strong> - Everything; slowest; fastest restore</li>
+        <li><strong>Incremental</strong> - Changes since last backup (any type); slowest restore</li>
+        <li><strong>Differential</strong> - Changes since last FULL; faster restore than incremental</li>
+        <li><strong>3-2-1 Rule</strong> - 3 copies, 2 different media types, 1 offsite</li>
+        <li><strong>Snapshot</strong> - Point-in-time (VM/storage)</li>
+        <li><strong>Cold site</strong> - Empty facility; slow to activate</li>
+        <li><strong>Warm site</strong> - Some equipment pre-installed</li>
+        <li><strong>Hot site</strong> - Fully operational duplicate; immediate failover</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Common Vulnerability Scanning</h3>
+      <ul>
+        <li><strong>Credentialed scan</strong> - Uses login; sees inside OS; more thorough</li>
+        <li><strong>Non-credentialed</strong> - External view; like attacker</li>
+        <li><strong>Active scan</strong> - Sends traffic to target</li>
+        <li><strong>Passive scan</strong> - Listen only; no traffic sent</li>
+        <li><strong>Agent-based</strong> - Software on endpoint, real-time</li>
+        <li><strong>False positive</strong> - Reports vuln that doesn't exist</li>
+        <li><strong>False negative</strong> - Misses real vuln (worse!)</li>
+        <li><strong>Nessus, Qualys, OpenVAS</strong> - Common scanners</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Pen Testing Phases</h3>
+      <ul>
+        <li><strong>1. Planning</strong> - Scope, rules of engagement, legal authorization</li>
+        <li><strong>2. Recon</strong> - Passive (OSINT) and active</li>
+        <li><strong>3. Scanning</strong> - Enumerate targets, find vulns</li>
+        <li><strong>4. Exploitation</strong> - Attack found vulnerabilities</li>
+        <li><strong>5. Post-exploitation</strong> - Pivot, escalate, persist</li>
+        <li><strong>6. Reporting</strong> - Document findings, recommendations</li>
+      </ul>
+      <ul style="margin-top:8px">
+        <li><span class="tag blue">Black box</span> - No prior knowledge</li>
+        <li><span class="tag yellow">Gray box</span> - Some knowledge (user-level)</li>
+        <li><span class="tag green">White box</span> - Full knowledge (source code, network maps)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- DOMAIN 5 -->
+<div class="domain" id="d4">
+  <div class="domain-header">
+    <h2>Domain 5: Security Program Management &amp; Oversight <span class="pct-badge" style="background:#1e1533;color:#a56ef9;">20%</span></h2>
+    <p>Risk management, compliance, policies, privacy, and frameworks</p>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h3>Risk Management</h3>
+      <ul>
+        <li><strong>Risk</strong> = Threat × Vulnerability × Impact</li>
+        <li><strong>Asset value (AV)</strong> - What the asset is worth</li>
+        <li><strong>Exposure factor (EF)</strong> - % of asset lost if risk occurs</li>
+        <li><strong>Single Loss Expectancy (SLE)</strong> = AV × EF</li>
+        <li><strong>Annual Rate of Occurrence (ARO)</strong> - How often per year</li>
+        <li><strong>Annual Loss Expectancy (ALE)</strong> = SLE × ARO</li>
+        <li><strong>Residual risk</strong> - Risk remaining after controls applied</li>
+        <li><strong>Inherent risk</strong> - Risk before any controls</li>
+      </ul>
+      <div class="mnemonic"><strong>ALE = SLE × ARO</strong> — memorize this formula cold!</div>
+    </div>
+    <div class="card">
+      <h3>Risk Response Strategies</h3>
+      <ul>
+        <li><strong>Avoid</strong> - Stop the risky activity entirely</li>
+        <li><strong>Transfer</strong> - Shift to third party (insurance, outsource)</li>
+        <li><strong>Mitigate/Reduce</strong> - Apply controls to reduce likelihood or impact</li>
+        <li><strong>Accept</strong> - Acknowledge risk, no action (residual risk)</li>
+        <li><strong>Reject/Ignore</strong> - Not a valid strategy! (wrong answer)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Security Frameworks</h3>
+      <ul>
+        <li><strong>NIST CSF</strong> - Identify, Protect, Detect, Respond, Recover</li>
+        <li><strong>NIST SP 800-53</strong> - Federal security controls catalog</li>
+        <li><strong>ISO 27001</strong> - International ISMS standard</li>
+        <li><strong>CIS Controls</strong> - 18 prioritized security controls</li>
+        <li><strong>COBIT</strong> - IT governance framework</li>
+        <li><strong>ITIL</strong> - IT service management</li>
+        <li><strong>SOC 2</strong> - Service org controls (Trust Services)</li>
+        <li><strong>CSA CCM</strong> - Cloud Security Alliance controls</li>
+      </ul>
+      <div class="mnemonic"><strong>NIST CSF:</strong> I <strong>P</strong>et <strong>D</strong>ogs <strong>R</strong>eally <strong>R</strong>ough = Identify, Protect, Detect, Respond, Recover</div>
+    </div>
+    <div class="card">
+      <h3>Compliance &amp; Regulations</h3>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Regulation</th><th>Scope</th></tr>
+          <tr><td>PCI-DSS</td><td>Payment card data</td></tr>
+          <tr><td>HIPAA</td><td>US healthcare data</td></tr>
+          <tr><td>GDPR</td><td>EU personal data</td></tr>
+          <tr><td>SOX</td><td>US public company financials</td></tr>
+          <tr><td>FERPA</td><td>US student education records</td></tr>
+          <tr><td>GLBA</td><td>US financial institutions</td></tr>
+          <tr><td>CMMC</td><td>US defense contractors</td></tr>
+          <tr><td>FedRAMP</td><td>US federal cloud services</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Policy Hierarchy</h3>
+      <ul>
+        <li><strong>Policy</strong> - High-level management intent/direction</li>
+        <li><strong>Standard</strong> - Specific requirements (must comply)</li>
+        <li><strong>Procedure</strong> - Step-by-step how-to</li>
+        <li><strong>Guideline</strong> - Recommendations (optional)</li>
+        <li><strong>Baseline</strong> - Minimum security configuration</li>
+      </ul>
+      <div class="mnemonic"><strong>PSPGB</strong>: Policies Set Proper Guidelines &amp; Baselines</div>
+    </div>
+    <div class="card">
+      <h3>Data Classification</h3>
+      <ul>
+        <li><strong>Government:</strong> Top Secret &gt; Secret &gt; Confidential &gt; Unclassified</li>
+        <li><strong>Commercial:</strong> Restricted &gt; Confidential &gt; Internal &gt; Public</li>
+        <li><strong>Data owner</strong> - Determines classification and access</li>
+        <li><strong>Data custodian</strong> - Manages and protects data (IT)</li>
+        <li><strong>Data steward</strong> - Ensures quality and proper use</li>
+        <li><strong>Data processor</strong> - Third party processing data (GDPR term)</li>
+        <li><strong>Data controller</strong> - Determines purpose of processing (GDPR term)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Privacy Concepts</h3>
+      <ul>
+        <li><strong>PII</strong> - Personally Identifiable Information</li>
+        <li><strong>PHI</strong> - Protected Health Information</li>
+        <li><strong>Data minimization</strong> - Collect only what's needed</li>
+        <li><strong>Right to be forgotten</strong> - GDPR erasure right</li>
+        <li><strong>Tokenization</strong> - Replace sensitive data with token (PCI)</li>
+        <li><strong>Anonymization</strong> - Remove all identifying info (irreversible)</li>
+        <li><strong>Pseudonymization</strong> - Replace ID with alias (reversible)</li>
+        <li><strong>Privacy by design</strong> - Build privacy in from start</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Third-Party Risk</h3>
+      <ul>
+        <li><strong>Vendor assessment</strong> - Evaluate before onboarding</li>
+        <li><strong>SLA</strong> - Service Level Agreement; uptime, response guarantees</li>
+        <li><strong>MOU</strong> - Memorandum of Understanding; intent, non-binding</li>
+        <li><strong>MOA</strong> - Memorandum of Agreement; binding</li>
+        <li><strong>MSA</strong> - Master Service Agreement; framework contract</li>
+        <li><strong>NDA</strong> - Non-Disclosure Agreement</li>
+        <li><strong>ISA</strong> - Interconnection Security Agreement; between orgs sharing network</li>
+        <li><strong>BPA</strong> - Business Partnership Agreement</li>
+        <li><strong>Supply chain attack</strong> - Compromise via trusted vendor (SolarWinds)</li>
+      </ul>
+    </div>
+    <div class="card wide">
+      <h3>Security Awareness &amp; Training</h3>
+      <p>Key topics covered in Sec+ training programs:</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">
+        <span class="tag">Phishing simulations</span><span class="tag">Password hygiene</span><span class="tag">Clean desk policy</span><span class="tag">Social engineering awareness</span><span class="tag">Insider threat programs</span><span class="tag">Acceptable use policy (AUP)</span><span class="tag">Security champions</span><span class="tag">Gamification</span><span class="tag">Role-based training</span><span class="tag">Computer-based training (CBT)</span>
+      </div>
+      <p style="margin-top:12px"><strong>Key principle:</strong> Users are the weakest link. Security awareness training is the #1 mitigating control for social engineering.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+function showDomain(n) {
+  document.querySelectorAll('.domain').forEach((d, i) => d.classList.toggle('active', i === n));
+  document.querySelectorAll('.nav button').forEach((b, i) => b.classList.toggle('active', i === n));
+}
+</script>
+</body>
+</html>
