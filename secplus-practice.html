@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sec+ SY0-701 Practice Questions</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3354;
+    --accent: #5b8dee;
+    --accent2: #e8564a;
+    --accent3: #4ecb71;
+    --accent4: #f0b429;
+    --accent5: #a56ef9;
+    --text: #e2e8f0;
+    --muted: #8892aa;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  header h1 { font-size: 17px; font-weight: 700; color: var(--accent); }
+  .hcontrols { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .btn { background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 500; transition: all .2s; }
+  .btn:hover { background: var(--border); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .progress-bar-wrap { background: var(--surface); padding: 10px 24px; border-bottom: 1px solid var(--border); display: flex; gap: 12px; align-items: center; }
+  .progress-bar { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: var(--accent); transition: width .3s; }
+  .progress-info { font-size: 12px; color: var(--muted); white-space: nowrap; }
+  .score-pill { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 12px; background: var(--surface2); }
+  .main { max-width: 760px; margin: 0 auto; padding: 24px 20px 60px; }
+  .q-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .q-number { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+  .q-domain { font-size: 11px; background: #1e2a4a; color: var(--accent); padding: 3px 10px; border-radius: 12px; }
+  .q-text { font-size: 16px; font-weight: 600; line-height: 1.6; margin-bottom: 20px; color: var(--text); }
+  .options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+  .option { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; cursor: pointer; display: flex; align-items: flex-start; gap: 12px; transition: all .2s; font-size: 14px; line-height: 1.5; }
+  .option:hover:not(.locked) { border-color: var(--accent); background: var(--surface2); }
+  .option.selected { border-color: var(--accent); background: #0d1e3d; }
+  .option.correct { border-color: var(--accent3) !important; background: #0a1e12 !important; }
+  .option.wrong { border-color: var(--accent2) !important; background: #1e0d0c !important; }
+  .option.missed { border-color: var(--accent3); background: #0a1e12; opacity: .7; }
+  .option-letter { font-weight: 700; color: var(--muted); min-width: 20px; margin-top: 1px; }
+  .option.correct .option-letter { color: var(--accent3); }
+  .option.wrong .option-letter { color: var(--accent2); }
+  .locked { cursor: default; }
+  .explanation { background: var(--surface2); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 16px; font-size: 13px; line-height: 1.7; display: none; }
+  .explanation.show { display: block; }
+  .explanation strong { color: var(--accent4); }
+  .explanation .correct-label { color: var(--accent3); font-weight: 700; display: block; margin-bottom: 6px; }
+  .btn-row { display: flex; gap: 10px; margin-top: 20px; }
+  .nav-dots { display: flex; gap: 5px; flex-wrap: wrap; padding: 10px 24px; border-bottom: 1px solid var(--border); background: var(--surface); }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--border); cursor: pointer; transition: background .2s; }
+  .dot.current { background: var(--accent); }
+  .dot.correct { background: var(--accent3); }
+  .dot.wrong { background: var(--accent2); }
+  .dot.skipped { background: var(--accent4); }
+  .results-screen { max-width: 760px; margin: 0 auto; padding: 40px 20px; }
+  .results-screen h2 { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
+  .score-big { font-size: 64px; font-weight: 700; line-height: 1; }
+  .pass { color: var(--accent3); }
+  .fail { color: var(--accent2); }
+  .results-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin: 24px 0; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center; }
+  .stat-card .num { font-size: 28px; font-weight: 700; }
+  .stat-card .lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+  .domain-breakdown { margin-top: 24px; }
+  .domain-breakdown h3 { font-size: 14px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+  .domain-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .domain-name { font-size: 12px; width: 200px; flex-shrink: 0; }
+  .domain-bar-wrap { flex: 1; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+  .domain-bar { height: 100%; border-radius: 4px; transition: width .5s; }
+  .domain-pct { font-size: 12px; color: var(--muted); width: 36px; text-align: right; }
+  .filter-bar { display: flex; gap: 6px; padding: 12px 24px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+  .filter-btn { background: var(--surface); border: 1px solid var(--border); color: var(--muted); padding: 4px 12px; border-radius: 16px; cursor: pointer; font-size: 11px; font-weight: 500; transition: all .2s; }
+  .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Sec+ SY0-701 Practice Questions</h1>
+  <div class="hcontrols">
+    <span class="score-pill" id="liveScore">0 / 0</span>
+    <button class="btn" onclick="restartQuiz()">Restart</button>
+    <button class="btn primary" onclick="showResults()">View Results</button>
+  </div>
+</header>
+<div class="filter-bar" id="filterBar"></div>
+<div class="nav-dots" id="navDots"></div>
+<div class="progress-bar-wrap">
+  <div class="progress-bar"><div class="progress-bar-fill" id="progFill" style="width:0%"></div></div>
+  <div class="progress-info" id="progInfo">Q 1 of ?</div>
+</div>
+<div class="main" id="mainArea"></div>
+
+<script>
+const QUESTIONS = [
+  // Domain 1
+  {id:1,domain:"D1: General Security",text:"A company wants to ensure that users cannot deny sending a message. Which security principle addresses this requirement?",opts:["Confidentiality","Integrity","Availability","Non-repudiation"],correct:3,exp:"<strong>Non-repudiation</strong> ensures a party cannot deny having performed an action. It is typically achieved through digital signatures (which use the sender's private key) and audit logs. Confidentiality protects data from unauthorized access; Integrity ensures data hasn't been altered; Availability ensures systems are accessible."},
+  {id:2,domain:"D1: General Security",text:"An administrator wants to implement the strongest symmetric encryption available. Which algorithm and key length should they choose?",opts:["3DES with 168-bit key","AES with 128-bit key","AES with 256-bit key","RSA with 2048-bit key"],correct:2,exp:"<strong>AES-256</strong> is the strongest option listed. AES is the current standard for symmetric encryption. 256-bit provides the highest security. 3DES is deprecated. RSA is asymmetric, not symmetric — and requires much longer keys (2048+) for equivalent security to 128-bit AES."},
+  {id:3,domain:"D1: General Security",text:"Which of the following BEST describes a digital signature?",opts:["Encrypt data with recipient's public key","Hash the message and encrypt the hash with the sender's private key","Encrypt data with a shared symmetric key","Hash the message and encrypt the hash with the recipient's public key"],correct:1,exp:"A <strong>digital signature</strong> involves the sender hashing the message and encrypting that hash with their own private key. The recipient decrypts with the sender's public key and compares hashes. This provides authenticity (only the private key holder could sign), integrity (hash comparison), and non-repudiation (only they have that key)."},
+  {id:4,domain:"D1: General Security",text:"A user logs in with a password and then receives a code on their mobile phone. Which type of authentication is this?",opts:["Single-factor authentication","Two-step verification (not true MFA)","Multi-factor authentication","Biometric authentication"],correct:2,exp:"This is <strong>MFA (Multi-Factor Authentication)</strong> because it uses two different factor TYPES: something you know (password) + something you have (phone with code). Note: some exam questions distinguish between 'two-step' (same type) and 'MFA' (different types). Password + PIN alone would be two-step, not MFA."},
+  {id:5,domain:"D1: General Security",text:"Which protocol provides real-time certificate revocation status, as opposed to downloading a large revocation list?",opts:["CRL","OCSP","CSR","PKI"],correct:1,exp:"<strong>OCSP (Online Certificate Status Protocol)</strong> provides real-time, per-certificate status checks. CRL (Certificate Revocation List) is a batch list that must be downloaded periodically and can be outdated. OCSP Stapling improves performance by having the server pre-fetch the OCSP response."},
+  {id:6,domain:"D1: General Security",text:"A company needs AAA services for its network devices and requires that each AAA component be handled separately with full payload encryption. Which protocol should they use?",opts:["RADIUS","LDAP","TACACS+","Kerberos"],correct:2,exp:"<strong>TACACS+</strong> (TCP 49) separates Authentication, Authorization, and Accounting into individual processes AND encrypts the entire payload. RADIUS (UDP 1812/1813) combines auth and authorization and only encrypts the password. LDAP is a directory protocol. Kerberos is ticket-based auth (not primarily for network device AAA)."},
+  {id:7,domain:"D1: General Security",text:"Which hashing algorithm should be avoided because it has known collision vulnerabilities?",opts:["SHA-256","SHA-3","MD5","SHA-512"],correct:2,exp:"<strong>MD5</strong> (128-bit output) has known collision vulnerabilities — two different inputs can produce the same hash — making it cryptographically broken for security purposes. SHA-1 is also deprecated. SHA-256 and above are currently considered secure. SHA-512 is part of the SHA-2 family and is secure."},
+  {id:8,domain:"D1: General Security",text:"An organization is implementing Zero Trust architecture. Which principle is MOST central to this model?",opts:["Perimeter-based security","Never trust, always verify","Trust but verify","Security by obscurity"],correct:1,exp:"<strong>'Never trust, always verify'</strong> is the core Zero Trust principle. Unlike traditional perimeter security (which trusts everything inside), Zero Trust requires explicit verification of every user and device regardless of location. It also assumes breach and uses least privilege + micro-segmentation."},
+  // Domain 2
+  {id:9,domain:"D2: Threats & Vulns",text:"An attacker sends targeted emails to executives claiming to be the CEO asking for an emergency wire transfer. What type of attack is this?",opts:["Phishing","Spear phishing","Whaling","Business Email Compromise (BEC)"],correct:3,exp:"This is <strong>BEC (Business Email Compromise)</strong>, specifically a form where the attacker impersonates an executive to trick employees into wire transfers. It's a sophisticated, financially motivated attack. Spear phishing is targeted but not necessarily financial; whaling targets executives specifically but is the phishing technique, while BEC describes the impersonation-for-fraud scenario."},
+  {id:10,domain:"D2: Threats & Vulns",text:"Which type of malware spreads across networks without user interaction, unlike a virus?",opts:["Trojan","Worm","Ransomware","Rootkit"],correct:1,exp:"A <strong>worm</strong> is self-replicating and spreads across networks automatically without requiring user action. A virus attaches to a file and needs user execution to spread. A Trojan disguises itself as legitimate software. Ransomware encrypts data for ransom. Rootkits operate at kernel level to hide malware."},
+  {id:11,domain:"D2: Threats & Vulns",text:"An attacker exploits a vulnerability for which no patch currently exists. What is this called?",opts:["Known vulnerability","Legacy exploit","Zero-day vulnerability","CVSS vulnerability"],correct:2,exp:"A <strong>zero-day vulnerability</strong> is one that is unknown to the software vendor (or for which no patch has been released). The name comes from 'zero days' to prepare a defense. These are highly valuable to attackers because traditional patch-based defenses don't work. Defense relies on behavior detection, IPS, and defense-in-depth."},
+  {id:12,domain:"D2: Threats & Vulns",text:"A developer wants to prevent SQL injection attacks in their web application. What is the MOST effective mitigation?",opts:["Input length validation","Web Application Firewall (WAF)","Parameterized queries (prepared statements)","Encrypting the database"],correct:2,exp:"<strong>Parameterized queries (prepared statements)</strong> are the most effective SQLi mitigation because they separate SQL code from data — user input is always treated as data, never as executable code. WAFs can help but are a defense-in-depth measure. Input length validation alone is insufficient. Encrypting the database doesn't prevent SQLi."},
+  {id:13,domain:"D2: Threats & Vulns",text:"Which attack type involves using precomputed hash values to quickly crack password hashes?",opts:["Birthday attack","Brute force attack","Rainbow table attack","Pass-the-hash"],correct:2,exp:"A <strong>rainbow table attack</strong> uses precomputed tables mapping plaintext passwords to their hash values for fast lookups. The defense is <strong>salting</strong> — adding a unique random value to each password before hashing, making precomputed tables useless. Pass-the-hash reuses a captured hash directly without cracking it."},
+  {id:14,domain:"D2: Threats & Vulns",text:"An attacker sends ICMP echo requests to a network broadcast address with a spoofed source IP of the victim. What type of DDoS attack is this?",opts:["SYN flood","Ping of death","Smurf attack","DNS amplification"],correct:2,exp:"A <strong>Smurf attack</strong> sends ICMP echo requests to a broadcast address with the victim's spoofed IP. All hosts on the network reply to the victim, amplifying the attack. SYN flood exploits TCP handshake. Ping of Death uses oversized packets. DNS amplification uses DNS servers to amplify traffic."},
+  {id:15,domain:"D2: Threats & Vulns",text:"An attacker poisons the ARP cache of a switch to redirect network traffic through their device. Which type of attack is this?",opts:["DNS poisoning","On-path (MITM) attack","Replay attack","Vishing"],correct:1,exp:"<strong>ARP poisoning</strong> is a Layer 2 technique used to perform an <strong>on-path (MITM) attack</strong>. By sending fake ARP replies, the attacker associates their MAC with a legitimate IP, causing traffic to flow through them. The question describes ARP poisoning as the technique used to achieve the on-path/MITM goal. 'On-path attack' is the new preferred term for MITM."},
+  {id:16,domain:"D2: Threats & Vulns",text:"Which framework maps adversary tactics and techniques based on real-world observations and is used for threat intelligence and detection engineering?",opts:["Cyber Kill Chain","NIST CSF","MITRE ATT&CK","OWASP Top 10"],correct:2,exp:"<strong>MITRE ATT&CK</strong> is the comprehensive knowledge base of adversary TTPs (Tactics, Techniques, Procedures) derived from real-world attacks. The Cyber Kill Chain is Lockheed Martin's linear model. NIST CSF is a risk management framework. OWASP Top 10 focuses on web application vulnerabilities."},
+  {id:17,domain:"D2: Threats & Vulns",text:"A user receives an email claiming their bank account has been locked, asking them to click a link to verify their credentials. The email was sent to thousands of random users. What type of attack is this?",opts:["Spear phishing","Whaling","Phishing","Vishing"],correct:2,exp:"This is <strong>phishing</strong> — a mass, untargeted email campaign. Spear phishing is targeted at a specific individual. Whaling targets executives. Vishing uses voice/phone. The key indicator here is 'thousands of random users' = mass untargeted = phishing."},
+  // Domain 3
+  {id:18,domain:"D3: Architecture",text:"A company hosts web servers accessible from the internet while keeping internal servers separate. What network architecture achieves this?",opts:["VLAN","VPN","DMZ","Air gap"],correct:2,exp:"A <strong>DMZ (Demilitarized Zone)</strong> is a network segment between two firewalls that hosts public-facing servers (web, email, DNS). Internet users can reach DMZ servers, but are blocked from the internal network. VLANs provide logical segmentation but not the same DMZ architecture. Air gap means no network connection at all."},
+  {id:19,domain:"D3: Architecture",text:"Which firewall type operates at Layer 7 and can make decisions based on application type, not just port numbers?",opts:["Packet filtering firewall","Stateful firewall","Next-Generation Firewall (NGFW)","Circuit-level gateway"],correct:2,exp:"A <strong>NGFW (Next-Generation Firewall)</strong> operates at Layer 7 (application layer) and understands applications regardless of port. It combines stateful inspection + deep packet inspection + IPS + application awareness + user identity. A packet filter only checks IP/port (Layer 3/4). Stateful tracks connection state but not application content."},
+  {id:20,domain:"D3: Architecture",text:"A company migrates its HR application to a cloud provider where the provider manages the OS and runtime, but the company manages the application and data. Which cloud model is this?",opts:["IaaS","PaaS","SaaS","FaaS"],correct:1,exp:"This is <strong>PaaS (Platform as a Service)</strong>. The provider manages the infrastructure, OS, and runtime. The customer manages their application and data. IaaS = customer manages OS and above. SaaS = customer only manages data and users. The key here: provider manages OS/runtime = PaaS."},
+  {id:21,domain:"D3: Architecture",text:"Which Wi-Fi security protocol uses SAE (Simultaneous Authentication of Equals) and provides forward secrecy?",opts:["WEP","WPA","WPA2-Personal","WPA3"],correct:3,exp:"<strong>WPA3</strong> introduced SAE (replacing the vulnerable 4-way handshake PSK) and provides forward secrecy (each session uses unique keys, so capturing old traffic doesn't help even if you later learn the password). WEP is completely broken. WPA used weak TKIP. WPA2 is still acceptable but vulnerable to PMKID and KRACK attacks."},
+  {id:22,domain:"D3: Architecture",text:"An organization wants to use TLS to encrypt data in transit but is concerned about performance. An employee suggests SSL instead. What should you advise?",opts:["SSL is fine for internal traffic","SSL 3.0 is acceptable if TLS is slow","TLS is the correct choice; SSL is deprecated and vulnerable","Use IPSec instead — it's faster than both"],correct:2,exp:"<strong>TLS (Transport Layer Security)</strong> is the correct, current protocol. SSL is deprecated and has known vulnerabilities (POODLE, BEAST). TLS 1.3 is the current version and is actually faster than older TLS versions. On the Security+ exam, never recommend SSL — always TLS. IPSec is for IP-layer VPNs, not web traffic."},
+  {id:23,domain:"D3: Architecture",text:"Which load balancing configuration ensures both nodes are actively handling traffic simultaneously, with no standby node?",opts:["Active-passive","Cold standby","Active-active","Round-robin"],correct:2,exp:"<strong>Active-active</strong> means all nodes are simultaneously handling traffic. This provides both load distribution AND redundancy. Active-passive has one node idle (waiting for failover). Cold standby is not active at all. Round-robin is a load balancing algorithm (how to distribute), not a redundancy configuration."},
+  {id:24,domain:"D3: Architecture",text:"A security engineer is designing a Zero Trust architecture and wants to prevent lateral movement between servers. What technique BEST achieves this?",opts:["Network segmentation with VLANs","Micro-segmentation","Deploying a perimeter firewall","Using a VPN for all traffic"],correct:1,exp:"<strong>Micro-segmentation</strong> applies fine-grained, workload-level security policies (often east-west/lateral traffic). This is the core Zero Trust mechanism to limit lateral movement. VLANs provide coarser Layer 2 segmentation but not workload-level policies. A perimeter firewall only protects north-south (in/out) traffic, not east-west movement."},
+  // Domain 4
+  {id:25,domain:"D4: Operations",text:"During incident response, a security team discovers an infected server. After containing the server, what is the NEXT step?",opts:["Recovery","Lessons learned","Eradication","Identification"],correct:2,exp:"Following the PICERL model: after <strong>Containment</strong>, the next step is <strong>Eradication</strong> — removing the malware and closing the attack vector. Then Recovery (restore systems), then Lessons Learned. Identification is the step before Containment. Recovery before Eradication would re-infect systems."},
+  {id:26,domain:"D4: Operations",text:"A forensic analyst needs to collect evidence from a compromised workstation. What should they collect FIRST according to the order of volatility?",opts:["Hard drive image","Log files","Contents of RAM","Backup tapes"],correct:2,exp:"The <strong>order of volatility</strong> dictates collecting the most volatile (fleeting) data first. RAM contents are lost when power is cut, so they must be captured first. Hard drive data persists. Log files may be rotated. Backup tapes are the least volatile. Order: CPU cache → RAM → Swap → HDD → Logs → Backups."},
+  {id:27,domain:"D4: Operations",text:"Which access control model is MOST commonly used in enterprise environments, where permissions are assigned based on job function?",opts:["MAC (Mandatory Access Control)","DAC (Discretionary Access Control)","RBAC (Role-Based Access Control)","ABAC (Attribute-Based Access Control)"],correct:2,exp:"<strong>RBAC (Role-Based Access Control)</strong> is the most common enterprise model — permissions are assigned to roles (job functions), and users are assigned to roles. MAC is used in government/classified environments with strict labels. DAC lets owners set permissions (flexible but inconsistent). ABAC uses dynamic attributes (advanced, used in cloud/Zero Trust)."},
+  {id:28,domain:"D4: Operations",text:"An organization's SIEM generates a high volume of alerts. Security wants to automate triage and response for common, low-risk alerts. What technology should they implement?",opts:["EDR","XDR","SOAR","IDS"],correct:2,exp:"<strong>SOAR (Security Orchestration, Automation and Response)</strong> automates repetitive security tasks and incident response playbooks, reducing analyst workload. It integrates with SIEM and other tools to automatically triage, investigate, and respond to common alert types. EDR is endpoint-focused. XDR correlates data across domains but isn't primarily automation-focused."},
+  {id:29,domain:"D4: Operations",text:"A company needs to ensure that no single employee can both create a vendor account AND approve payments to that vendor. What security principle does this implement?",opts:["Least privilege","Separation of duties","Job rotation","Mandatory vacation"],correct:1,exp:"<strong>Separation of duties</strong> ensures that no single person can complete a sensitive process from start to finish, preventing fraud and errors. This is a classic example: separating who creates vendors from who approves payments. Least privilege limits what someone can do. Job rotation detects fraud over time. Mandatory vacation also helps detect fraud (someone else must cover)."},
+  {id:30,domain:"D4: Operations",text:"A security analyst receives a differential backup strategy summary. Which statement about differential backups is CORRECT?",opts:["Backs up only files changed since the last backup of any type","Backs up all files regardless","Backs up all files changed since the last FULL backup","Requires all incremental sets to restore"],correct:2,exp:"<strong>Differential backups</strong> capture all changes since the last FULL backup. Restoration requires only the last full backup + the latest differential. Incremental backs up changes since the last backup of ANY type (faster to back up, slower to restore — need full + ALL incrementals). Differential = more data per backup but faster restore than incremental."},
+  {id:31,domain:"D4: Operations",text:"Which type of penetration test gives the tester full knowledge of the network, including source code, network diagrams, and system configurations?",opts:["Black box","Gray box","White box","Red team"],correct:2,exp:"A <strong>white box</strong> (also called crystal/glass box) test provides the tester complete knowledge of the environment. This is the most thorough type. Black box = no prior knowledge (simulates external attacker). Gray box = partial knowledge (simulates insider). Red team is a type of engagement style, not a knowledge level."},
+  {id:32,domain:"D4: Operations",text:"An attacker has accessed an enterprise network and is using valid administrator credentials captured via a keylogger. What is the MOST effective control to limit the damage of this credential theft?",opts:["Antivirus software","PAM (Privileged Access Management)","VLAN segmentation","Increasing password complexity requirements"],correct:1,exp:"<strong>PAM (Privileged Access Management)</strong> mitigates credential theft by vaulting privileged credentials (they're never used directly), enabling just-in-time access (credentials exist only when needed), recording sessions, and rotating passwords automatically. Even with stolen credentials, the attacker may not be able to authenticate if PAM controls are in place."},
+  {id:33,domain:"D4: Operations",text:"What method of data sanitization renders data on SSDs and cloud storage unreadable by destroying the encryption keys?",opts:["Degaussing","Overwriting with DoD 5220.22-M","Crypto-shredding","Physical shredding"],correct:2,exp:"<strong>Crypto-shredding</strong> destroys the encryption keys, rendering encrypted data permanently unreadable without physically destroying the media. It's ideal for SSDs (overwriting doesn't work well on SSDs due to wear-leveling) and cloud storage (you can't physically destroy cloud hardware). Degaussing works only on magnetic media, not SSDs."},
+  // Domain 5
+  {id:34,domain:"D5: Governance",text:"An organization's asset is valued at $500,000. If a specific threat occurs, 40% of the asset would be damaged. This threat is expected to occur twice per year. What is the ALE?",opts:["$100,000","$200,000","$400,000","$40,000"],correct:2,exp:"<strong>SLE = AV × EF = $500,000 × 0.40 = $200,000.</strong> ALE = SLE × ARO = $200,000 × 2 = <strong>$400,000</strong>. This formula is tested directly. AV = Asset Value ($500K), EF = Exposure Factor (40%), ARO = Annual Rate of Occurrence (2). Memorize: ALE = SLE × ARO, SLE = AV × EF."},
+  {id:35,domain:"D5: Governance",text:"After implementing security controls, a residual risk remains. Management decides to purchase cyber insurance to address this remaining risk. Which risk response strategy is this?",opts:["Avoid","Mitigate","Transfer","Accept"],correct:2,exp:"Purchasing cyber insurance is <strong>risk transfer</strong> — shifting the financial impact of residual risk to a third party (the insurer). Avoidance = stop the risky activity. Mitigation = apply controls to reduce risk. Acceptance = acknowledge and do nothing. 'Reject' is NOT a valid risk strategy on the exam."},
+  {id:36,domain:"D5: Governance",text:"Which compliance framework applies to organizations that store, process, or transmit credit card data?",opts:["HIPAA","GDPR","PCI-DSS","SOX"],correct:2,exp:"<strong>PCI-DSS (Payment Card Industry Data Security Standard)</strong> applies to any organization handling cardholder data. HIPAA protects health information. GDPR protects EU personal data. SOX governs financial reporting for US public companies. PCI-DSS has 12 requirements and requires annual assessments."},
+  {id:37,domain:"D5: Governance",text:"Under GDPR, an organization discovers a data breach. Within what timeframe must they notify the relevant supervisory authority?",opts:["24 hours","48 hours","72 hours","7 days"],correct:2,exp:"<strong>GDPR requires notification within 72 hours</strong> of becoming aware of a breach (Article 33). If notification isn't possible within 72 hours, the reason for delay must be provided. US state laws vary (often 30-60 days). This 72-hour GDPR requirement is a common exam question."},
+  {id:38,domain:"D5: Governance",text:"Which role in data governance is responsible for determining the classification of data and who should have access to it?",opts:["Data custodian","Data processor","Data owner","Data steward"],correct:2,exp:"The <strong>data owner</strong> is the business-side person/role responsible for classifying data and determining who should have access. The data custodian (usually IT) implements and maintains the technical controls. The data steward ensures data quality and proper use. The data processor (GDPR term) is a third party that processes data on behalf of the controller."},
+  {id:39,domain:"D5: Governance",text:"A company wants to replace stored credit card numbers with non-sensitive placeholders that have no mathematical relationship to the original. What technique is this?",opts:["Encryption","Hashing","Tokenization","Pseudonymization"],correct:2,exp:"<strong>Tokenization</strong> replaces sensitive data (like credit card numbers) with a random token. The original data is stored in a separate secure vault. Unlike encryption, there is no mathematical algorithm linking the token to the original — you need access to the vault. PCI-DSS commonly recommends tokenization for cardholder data."},
+  {id:40,domain:"D5: Governance",text:"A security manager must document how employees are expected to use company computers and the internet. What type of document should they create?",opts:["Procedure","Standard","Acceptable Use Policy (AUP)","Baseline configuration"],correct:2,exp:"An <strong>Acceptable Use Policy (AUP)</strong> is a policy document that defines how employees may use company systems, networks, and the internet. It's a type of security policy. A procedure is a step-by-step how-to. A standard defines mandatory technical requirements. A baseline defines minimum security configurations."},
+  {id:41,domain:"D5: Governance",text:"An organization signs an agreement with a cloud provider that specifies minimum uptime guarantees and response times for outages. What type of agreement is this?",opts:["MOU","ISA","NDA","SLA"],correct:3,exp:"An <strong>SLA (Service Level Agreement)</strong> defines measurable performance commitments: uptime percentages, response times, and penalties for non-compliance. An MOU (Memorandum of Understanding) states intent but is non-binding. An ISA (Interconnection Security Agreement) covers network interconnections between organizations. An NDA covers confidentiality."},
+  {id:42,domain:"D5: Governance",text:"The SolarWinds attack involved compromising the vendor's build pipeline to distribute malicious updates to thousands of customers. What type of risk does this represent?",opts:["Zero-day risk","Insider threat","Supply chain risk","Configuration risk"],correct:2,exp:"The SolarWinds attack is the quintessential <strong>supply chain attack</strong> — compromising a trusted vendor/supplier to reach their customers. It's a highly effective attack vector because customers implicitly trust updates from their vendors. Mitigations include vendor risk assessments, software signing verification, and SBOM (Software Bill of Materials)."},
+];
+
+let qList = [...QUESTIONS];
+let current = 0;
+let answered = {};
+let activeFilter = 'All';
+
+function getFilters() {
+  return ['All', ...new Set(QUESTIONS.map(q => q.domain))];
+}
+
+function buildFilters() {
+  const bar = document.getElementById('filterBar');
+  getFilters().forEach(f => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn' + (f === 'All' ? ' active' : '');
+    btn.textContent = f;
+    btn.onclick = () => setFilter(f);
+    bar.appendChild(btn);
+  });
+}
+
+function setFilter(f) {
+  activeFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.textContent === f));
+  qList = f === 'All' ? [...QUESTIONS] : QUESTIONS.filter(q => q.domain === f);
+  answered = {};
+  current = 0;
+  buildDots();
+  renderQuestion();
+}
+
+function buildDots() {
+  const el = document.getElementById('navDots');
+  el.innerHTML = '';
+  qList.forEach((q, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === current ? ' current' : '');
+    d.title = `Q${i+1}`;
+    d.onclick = () => { current = i; renderQuestion(); };
+    el.appendChild(d);
+  });
+}
+
+function updateDots() {
+  document.querySelectorAll('.dot').forEach((d, i) => {
+    d.className = 'dot';
+    if (i === current) d.classList.add('current');
+    const r = answered[qList[i]?.id];
+    if (r === 'correct') d.classList.add('correct');
+    else if (r === 'wrong') d.classList.add('wrong');
+  });
+}
+
+function renderQuestion() {
+  if (current >= qList.length) { showResults(); return; }
+  const q = qList[current];
+  const isAnswered = answered[q.id] !== undefined;
+  const userAnswer = answered[q.id]?.selected;
+  const letters = ['A','B','C','D'];
+
+  let optionsHTML = q.opts.map((opt, i) => {
+    let cls = 'option';
+    if (isAnswered) {
+      cls += ' locked';
+      if (i === q.correct) cls += ' correct';
+      else if (i === userAnswer && i !== q.correct) cls += ' wrong';
+    }
+    return `<div class="${cls}" onclick="selectAnswer(${i})">
+      <span class="option-letter">${letters[i]}.</span>
+      <span>${opt}</span>
+    </div>`;
+  }).join('');
+
+  const expClass = isAnswered ? 'explanation show' : 'explanation';
+  const correctLabel = isAnswered ? `<span class="correct-label">${answered[q.id].correct ? '✓ Correct!' : '✗ Incorrect — Correct answer: ' + letters[q.correct]}</span>` : '';
+
+  document.getElementById('mainArea').innerHTML = `
+    <div class="q-header">
+      <span class="q-number">Question ${current + 1} of ${qList.length}</span>
+      <span class="q-domain">${q.domain}</span>
+    </div>
+    <div class="q-text">${q.text}</div>
+    <div class="options">${optionsHTML}</div>
+    <div class="${expClass}">${correctLabel}${q.exp}</div>
+    <div class="btn-row">
+      ${current > 0 ? '<button class="btn" onclick="goTo(current-1)">← Previous</button>' : ''}
+      ${isAnswered && current < qList.length - 1 ? '<button class="btn primary" onclick="goTo(current+1)">Next →</button>' : ''}
+      ${isAnswered && current === qList.length - 1 ? '<button class="btn primary" onclick="showResults()">View Results</button>' : ''}
+    </div>`;
+
+  updateProgress();
+  updateDots();
+  updateLiveScore();
+}
+
+function goTo(n) {
+  current = n;
+  renderQuestion();
+}
+
+function selectAnswer(i) {
+  const q = qList[current];
+  if (answered[q.id]) return;
+  const isCorrect = i === q.correct;
+  answered[q.id] = { selected: i, correct: isCorrect };
+  renderQuestion();
+}
+
+function updateProgress() {
+  const total = qList.length;
+  const done = Object.keys(answered).length;
+  document.getElementById('progFill').style.width = ((current + 1) / total * 100) + '%';
+  document.getElementById('progInfo').textContent = `Q ${current + 1} of ${total} (${done} answered)`;
+}
+
+function updateLiveScore() {
+  const vals = Object.values(answered);
+  const correct = vals.filter(v => v.correct).length;
+  document.getElementById('liveScore').textContent = `${correct} / ${vals.length}`;
+}
+
+function showResults() {
+  const vals = Object.values(answered);
+  const correct = vals.filter(v => v.correct).length;
+  const total = qList.length;
+  const answered_count = vals.length;
+  const pct = answered_count ? Math.round(correct / answered_count * 100) : 0;
+  const passing = pct >= 75;
+
+  // Domain breakdown
+  const domainStats = {};
+  qList.forEach(q => {
+    if (!domainStats[q.domain]) domainStats[q.domain] = {correct:0,total:0};
+    domainStats[q.domain].total++;
+    if (answered[q.id]?.correct) domainStats[q.domain].correct++;
+  });
+
+  let domainRows = Object.entries(domainStats).map(([domain, st]) => {
+    const p = st.total ? Math.round(st.correct / st.total * 100) : 0;
+    const color = p >= 75 ? 'var(--accent3)' : p >= 50 ? 'var(--accent4)' : 'var(--accent2)';
+    return `<div class="domain-row">
+      <div class="domain-name">${domain}</div>
+      <div class="domain-bar-wrap"><div class="domain-bar" style="width:${p}%;background:${color}"></div></div>
+      <div class="domain-pct">${p}%</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('mainArea').innerHTML = `
+    <div class="results-screen">
+      <h2>Quiz Results</h2>
+      <div class="score-big ${passing ? 'pass' : 'fail'}">${pct}%</div>
+      <div style="color:var(--muted);margin:8px 0 20px;font-size:14px">${passing ? 'Passing score — great work!' : 'Below 75% — keep studying!'} (${correct}/${answered_count} answered)</div>
+      <div class="results-stats">
+        <div class="stat-card"><div class="num" style="color:var(--accent3)">${correct}</div><div class="lbl">Correct</div></div>
+        <div class="stat-card"><div class="num" style="color:var(--accent2)">${answered_count - correct}</div><div class="lbl">Wrong</div></div>
+        <div class="stat-card"><div class="num" style="color:var(--accent4)">${total - answered_count}</div><div class="lbl">Skipped</div></div>
+        <div class="stat-card"><div class="num" style="color:var(--accent)">${pct}%</div><div class="lbl">Score</div></div>
+      </div>
+      <div class="domain-breakdown">
+        <h3>Score by Domain</h3>
+        ${domainRows}
+      </div>
+      <div class="btn-row" style="margin-top:24px">
+        <button class="btn primary" onclick="restartQuiz()">Restart</button>
+        <button class="btn" onclick="reviewWrong()">Review Wrong Answers</button>
+        <button class="btn" onclick="goTo(0)">Review All</button>
+      </div>
+    </div>`;
+}
+
+function restartQuiz() {
+  answered = {};
+  current = 0;
+  buildDots();
+  renderQuestion();
+}
+
+function reviewWrong() {
+  const wrongIds = Object.entries(answered).filter(([id, v]) => !v.correct).map(([id]) => parseInt(id));
+  if (!wrongIds.length) { alert('No wrong answers to review!'); return; }
+  qList = QUESTIONS.filter(q => wrongIds.includes(q.id));
+  answered = {};
+  current = 0;
+  buildDots();
+  renderQuestion();
+}
+
+buildFilters();
+buildDots();
+renderQuestion();
+</script>
+</body>
+</html>
