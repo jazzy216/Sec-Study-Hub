@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sec+ SY0-701 Flashcards</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3354;
+    --accent: #5b8dee;
+    --accent2: #e8564a;
+    --accent3: #4ecb71;
+    --accent4: #f0b429;
+    --accent5: #a56ef9;
+    --text: #e2e8f0;
+    --muted: #8892aa;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+  header h1 { font-size: 17px; font-weight: 700; color: var(--accent); }
+  .controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .controls select { background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 5px 10px; border-radius: 6px; font-size: 12px; }
+  .btn { background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 500; transition: all .2s; }
+  .btn:hover { background: var(--border); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn.primary:hover { opacity: .85; }
+  .progress-bar-wrap { background: var(--surface); padding: 10px 24px; border-bottom: 1px solid var(--border); }
+  .progress-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: var(--accent3); transition: width .3s; }
+  .progress-info { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 5px; }
+  .main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px 20px; }
+  .card-area { perspective: 1000px; width: 100%; max-width: 600px; min-height: 300px; cursor: pointer; margin-bottom: 24px; }
+  .card-inner { position: relative; width: 100%; min-height: 300px; transition: transform .5s; transform-style: preserve-3d; }
+  .card-inner.flipped { transform: rotateY(180deg); }
+  .card-face { position: absolute; inset: 0; backface-visibility: hidden; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; min-height: 300px; }
+  .card-face.back { transform: rotateY(180deg); background: var(--surface2); }
+  .card-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 16px; font-weight: 600; }
+  .card-term { font-size: 24px; font-weight: 700; color: var(--accent); line-height: 1.3; }
+  .card-def { font-size: 15px; line-height: 1.7; color: var(--text); }
+  .card-domain { font-size: 11px; color: var(--accent5); margin-top: 14px; }
+  .card-hint { font-size: 12px; color: var(--muted); margin-top: 10px; font-style: italic; }
+  .nav-buttons { display: flex; gap: 10px; align-items: center; }
+  .nav-buttons .btn { padding: 10px 24px; font-size: 14px; }
+  .rating-buttons { display: flex; gap: 8px; margin-top: 12px; opacity: 0; transition: opacity .3s; pointer-events: none; }
+  .rating-buttons.show { opacity: 1; pointer-events: all; }
+  .rating-btn { padding: 8px 20px; border-radius: 8px; border: 1px solid; cursor: pointer; font-size: 13px; font-weight: 600; transition: all .2s; background: transparent; }
+  .rating-btn.wrong { border-color: var(--accent2); color: var(--accent2); }
+  .rating-btn.wrong:hover { background: var(--accent2); color: #fff; }
+  .rating-btn.hard { border-color: var(--accent4); color: var(--accent4); }
+  .rating-btn.hard:hover { background: var(--accent4); color: #000; }
+  .rating-btn.got { border-color: var(--accent3); color: var(--accent3); }
+  .rating-btn.got:hover { background: var(--accent3); color: #000; }
+  .stats-row { display: flex; gap: 16px; font-size: 12px; color: var(--muted); }
+  .stats-row span strong { color: var(--text); }
+  .done-screen { text-align: center; padding: 40px; }
+  .done-screen h2 { font-size: 26px; color: var(--accent3); margin-bottom: 12px; }
+  .done-screen p { color: var(--muted); margin-bottom: 20px; }
+  .category-filter { display: flex; gap: 6px; flex-wrap: wrap; padding: 12px 24px; border-bottom: 1px solid var(--border); justify-content: center; }
+  .cat-btn { background: var(--surface); border: 1px solid var(--border); color: var(--muted); padding: 4px 12px; border-radius: 16px; cursor: pointer; font-size: 11px; font-weight: 500; transition: all .2s; }
+  .cat-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Sec+ SY0-701 Flashcards</h1>
+  <div class="controls">
+    <button class="btn" onclick="shuffleCards()">Shuffle</button>
+    <button class="btn" onclick="resetDeck()">Reset</button>
+    <button class="btn primary" onclick="reviewWrong()">Review Wrong</button>
+  </div>
+</header>
+<div class="category-filter" id="catFilter"></div>
+<div class="progress-bar-wrap">
+  <div class="progress-bar"><div class="progress-bar-fill" id="progFill"></div></div>
+  <div class="progress-info">
+    <span id="progText">Card 1 of ?</span>
+    <div class="stats-row">
+      <span><strong id="statGot">0</strong> Got it</span>
+      <span><strong id="statHard">0</strong> Hard</span>
+      <span><strong id="statWrong">0</strong> Wrong</span>
+    </div>
+  </div>
+</div>
+<div class="main">
+  <div class="card-area" onclick="flipCard()" id="cardArea">
+    <div class="card-inner" id="cardInner">
+      <div class="card-face front">
+        <div class="card-label">Term</div>
+        <div class="card-term" id="cardTerm">Loading...</div>
+        <div class="card-hint">Click to reveal answer</div>
+      </div>
+      <div class="card-face back">
+        <div class="card-label">Definition</div>
+        <div class="card-def" id="cardDef"></div>
+        <div class="card-domain" id="cardDomain"></div>
+      </div>
+    </div>
+  </div>
+  <div class="rating-buttons" id="ratingBtns">
+    <button class="rating-btn wrong" onclick="rate('wrong')">X Got Wrong</button>
+    <button class="rating-btn hard" onclick="rate('hard')">~ Hard</button>
+    <button class="rating-btn got" onclick="rate('got')">✓ Got It</button>
+  </div>
+  <div class="nav-buttons" style="margin-top:16px">
+    <button class="btn" onclick="prevCard()">← Prev</button>
+    <button class="btn" onclick="nextCard()">Next →</button>
+  </div>
+</div>
+
+<script>
+const ALL_CARDS = [
+  // Domain 1
+  {term:"CIA Triad", def:"Confidentiality (only authorized access), Integrity (data not altered), Availability (accessible when needed). The foundation of all security.", domain:"D1: General Security"},
+  {term:"Non-repudiation", def:"The assurance that someone cannot deny having performed an action. Achieved via digital signatures and audit logs.", domain:"D1: General Security"},
+  {term:"Symmetric encryption", def:"Uses the SAME key to encrypt and decrypt. Fast, efficient. Problem: secure key distribution. Examples: AES, 3DES, RC4.", domain:"D1: General Security"},
+  {term:"Asymmetric encryption", def:"Uses a PUBLIC key to encrypt, PRIVATE key to decrypt (or vice versa for signing). Slow but solves key distribution. Examples: RSA, ECC, DSA.", domain:"D1: General Security"},
+  {term:"Hashing", def:"One-way mathematical function that produces a fixed-size output (digest) from any input. Cannot be reversed. Used for integrity verification. Examples: SHA-256, MD5.", domain:"D1: General Security"},
+  {term:"Digital signature", def:"Asymmetric process: sender encrypts hash with their PRIVATE key. Proves authenticity, integrity, and non-repudiation. Recipient verifies with sender's PUBLIC key.", domain:"D1: General Security"},
+  {term:"PKI (Public Key Infrastructure)", def:"Framework of policies, procedures, hardware, software, and people to manage digital certificates and public keys. Core components: CA, RA, CRL, OCSP.", domain:"D1: General Security"},
+  {term:"Certificate Authority (CA)", def:"Trusted entity that issues and signs digital certificates. Root CA is the top of the hierarchy and should be kept offline. Intermediate CAs issue end-entity certs.", domain:"D1: General Security"},
+  {term:"CRL vs OCSP", def:"CRL = Certificate Revocation List (batch download, can be outdated). OCSP = Online Certificate Status Protocol (real-time query). OCSP Stapling = server provides pre-fetched OCSP response.", domain:"D1: General Security"},
+  {term:"MFA (Multi-Factor Authentication)", def:"Using 2+ different factor TYPES. Types: something you know (password), have (token), are (biometric), somewhere you are (location), something you do (behavior). Same type twice ≠ MFA.", domain:"D1: General Security"},
+  {term:"AAA Framework", def:"Authentication (who are you?), Authorization (what can you do?), Accounting (what did you do?). Implemented by RADIUS, TACACS+, Diameter.", domain:"D1: General Security"},
+  {term:"RADIUS", def:"Remote Authentication Dial-In User Service. AAA protocol for network access. Uses UDP ports 1812 (auth) and 1813 (accounting). Encrypts only password field.", domain:"D1: General Security"},
+  {term:"TACACS+", def:"Terminal Access Controller Access Control System Plus. Cisco AAA. Uses TCP port 49. Encrypts ENTIRE payload. Separates AAA functions (RADIUS combines them).", domain:"D1: General Security"},
+  {term:"Kerberos", def:"Ticket-based authentication protocol. Uses port 88. Components: KDC (Key Distribution Center), TGT (Ticket Granting Ticket), service tickets. Used in Active Directory.", domain:"D1: General Security"},
+  {term:"AES", def:"Advanced Encryption Standard. Symmetric block cipher. Key sizes: 128, 192, 256 bits. Current gold standard for symmetric encryption. Replaced 3DES.", domain:"D1: General Security"},
+  {term:"RSA", def:"Rivest-Shamir-Adleman. Asymmetric algorithm. Minimum 2048-bit keys recommended. Used for key exchange and digital signatures. Based on prime factorization difficulty.", domain:"D1: General Security"},
+  {term:"ECC (Elliptic Curve Cryptography)", def:"Asymmetric algorithm. Smaller key sizes for equivalent security (256-bit ECC ≈ 3072-bit RSA). More efficient, ideal for mobile/IoT. Used in TLS, SSH.", domain:"D1: General Security"},
+  {term:"SHA-256", def:"Secure Hash Algorithm, 256-bit output. Part of SHA-2 family. Current standard. SHA-1 (160-bit) is deprecated. MD5 (128-bit) is broken — do not use for security.", domain:"D1: General Security"},
+  {term:"Zero Trust", def:"Security model: 'Never trust, always verify.' Assumes breach. Requires explicit verification using all data points, least privilege access, and micro-segmentation.", domain:"D1: General Security"},
+  {term:"Least Privilege", def:"Users/systems get minimum permissions needed to do their job. Reduces blast radius of compromise. Applied to users, service accounts, applications.", domain:"D1: General Security"},
+  // Domain 2
+  {term:"Phishing vs Spear Phishing", def:"Phishing = mass email luring victims. Spear phishing = targeted at specific individual. Whaling = targeted at C-level executives. Vishing = phone. Smishing = SMS.", domain:"D2: Threats & Vulns"},
+  {term:"Pretexting", def:"Social engineering technique where attacker creates a fabricated scenario (pretext) to manipulate a victim into providing information or access. Example: fake IT support call.", domain:"D2: Threats & Vulns"},
+  {term:"Business Email Compromise (BEC)", def:"Attacker compromises or spoofs executive email to trick employees into wire transfers or data disclosure. Sophisticated spear phishing variant. Financial fraud.", domain:"D2: Threats & Vulns"},
+  {term:"Ransomware", def:"Malware that encrypts victim's data and demands payment for decryption key. Spread via phishing, RDP exploits, drive-by downloads. Mitigation: backups, patching, least privilege.", domain:"D2: Threats & Vulns"},
+  {term:"Rootkit", def:"Malware that hides itself and other malware by operating at kernel/root level. Very difficult to detect/remove. May require OS reinstall. Can hide processes, files, network connections.", domain:"D2: Threats & Vulns"},
+  {term:"Fileless malware", def:"Malware that resides in memory or uses legitimate system tools (PowerShell, WMI). Leaves no file on disk. Evades signature-based AV. Detected by behavior/memory analysis.", domain:"D2: Threats & Vulns"},
+  {term:"Botnet", def:"Network of compromised machines (bots/zombies) controlled by a C2 (command and control) server. Used for DDoS, spam, credential stuffing, mining cryptocurrency.", domain:"D2: Threats & Vulns"},
+  {term:"Logic bomb", def:"Malicious code that activates when a specific condition is met (date, event, login). Often planted by insiders. Difficult to detect before trigger.", domain:"D2: Threats & Vulns"},
+  {term:"SQL Injection", def:"Attacker inserts malicious SQL into input fields to manipulate database queries. Can bypass auth, extract/modify/delete data. Mitigation: parameterized queries (prepared statements), input validation.", domain:"D2: Threats & Vulns"},
+  {term:"XSS (Cross-Site Scripting)", def:"Attacker injects malicious scripts into a trusted website viewed by others. Types: Stored (persistent), Reflected (non-persistent), DOM-based. Mitigation: input sanitization, CSP.", domain:"D2: Threats & Vulns"},
+  {term:"CSRF (Cross-Site Request Forgery)", def:"Tricks authenticated user's browser into sending unauthorized request to a trusted site. Victim is logged in; attacker's link exploits their session. Mitigation: CSRF tokens, SameSite cookies.", domain:"D2: Threats & Vulns"},
+  {term:"Buffer overflow", def:"Attacker writes more data than a buffer can hold, overwriting adjacent memory. Can allow arbitrary code execution. Mitigation: ASLR, DEP/NX bit, safe coding practices, stack canaries.", domain:"D2: Threats & Vulns"},
+  {term:"ARP Poisoning", def:"Attacker sends fake ARP replies to associate their MAC with another IP. Enables Layer 2 MITM attack, session hijacking. Mitigation: dynamic ARP inspection (DAI), static ARP entries.", domain:"D2: Threats & Vulns"},
+  {term:"DNS Poisoning (Cache Poisoning)", def:"Attacker corrupts a DNS resolver's cache to redirect users to malicious sites. Mitigation: DNSSEC (DNS Security Extensions), randomize source ports/transaction IDs.", domain:"D2: Threats & Vulns"},
+  {term:"Pass-the-Hash", def:"Attacker captures password hash and uses it directly for authentication without cracking. Exploits NTLM authentication. Mitigation: Kerberos, Protected Users group, Credential Guard.", domain:"D2: Threats & Vulns"},
+  {term:"Rainbow table attack", def:"Uses precomputed hash tables to reverse-lookup passwords from hashes. Very fast. Mitigation: salting — adds random data to password before hashing, making precomputed tables useless.", domain:"D2: Threats & Vulns"},
+  {term:"Zero-day vulnerability", def:"A vulnerability that is publicly unknown and has no patch available. High value to attackers because no defense exists yet. Mitigate via defense-in-depth, behavior detection.", domain:"D2: Threats & Vulns"},
+  {term:"MITRE ATT&CK", def:"Knowledgebase of adversary tactics, techniques, and procedures (TTPs) based on real-world observations. Used for threat intelligence, detection engineering, red/blue team exercises.", domain:"D2: Threats & Vulns"},
+  {term:"CVE and CVSS", def:"CVE = Common Vulnerabilities & Exposures (unique ID for each known vuln). CVSS = Common Vulnerability Scoring System (0-10 severity score). NVD = National Vulnerability Database.", domain:"D2: Threats & Vulns"},
+  {term:"Cyber Kill Chain", def:"Lockheed Martin model: Recon → Weaponize → Deliver → Exploit → Install → C2 → Actions on Objectives. Each stage is an opportunity to detect and stop an attack.", domain:"D2: Threats & Vulns"},
+  {term:"Indicators of Compromise (IoC)", def:"Evidence that a system has been compromised: file hashes, malicious IPs/domains, registry keys, unusual process activity. Used in threat intelligence sharing (STIX/TAXII).", domain:"D2: Threats & Vulns"},
+  // Domain 3
+  {term:"DMZ (Demilitarized Zone)", def:"Network segment between two firewalls that hosts public-facing services (web servers, email). Traffic from internet hits DMZ, not directly the internal network.", domain:"D3: Architecture"},
+  {term:"VLAN", def:"Virtual LAN. Logical segmentation of a network at Layer 2. Limits broadcast domains, separates traffic. Requires router/firewall to route between VLANs.", domain:"D3: Architecture"},
+  {term:"NGFW (Next-Generation Firewall)", def:"Combines stateful firewall + application awareness + IPS + user/group identity + SSL inspection + threat intelligence. Can make decisions based on application, not just port.", domain:"D3: Architecture"},
+  {term:"WAF (Web Application Firewall)", def:"Firewall specifically for HTTP/HTTPS traffic. Inspects Layer 7 content. Protects against SQLi, XSS, CSRF, OWASP Top 10 attacks. Works at application layer.", domain:"D3: Architecture"},
+  {term:"IDS vs IPS", def:"IDS = Intrusion Detection System (alerts only, out-of-band). IPS = Intrusion Prevention System (blocks + alerts, inline). False positive in IPS = blocking legitimate traffic.", domain:"D3: Architecture"},
+  {term:"WPA3", def:"Latest Wi-Fi security standard. Uses SAE (Simultaneous Authentication of Equals) replacing PSK. Forward secrecy per-session. Uses AES-GCMP. Requires Protected Management Frames.", domain:"D3: Architecture"},
+  {term:"IPSec", def:"Suite of protocols for securing IP traffic. Two modes: Transport (encrypts payload only) and Tunnel (encrypts entire IP packet). Uses AH (auth only) or ESP (auth + encryption).", domain:"D3: Architecture"},
+  {term:"TLS (Transport Layer Security)", def:"Successor to SSL. Current version: TLS 1.3. Provides confidentiality, integrity, authentication for network communications. Used in HTTPS, IMAPS, SMTPS. SSL is deprecated.", domain:"D3: Architecture"},
+  {term:"Cloud Shared Responsibility", def:"Cloud provider = security OF the cloud (hardware, hypervisor, physical). Customer = security IN the cloud (data, IAM, OS configuration, apps — varies by IaaS/PaaS/SaaS).", domain:"D3: Architecture"},
+  {term:"IaaS vs PaaS vs SaaS", def:"IaaS: you manage OS up. PaaS: you manage apps and data. SaaS: you manage data and user access only. More SaaS = less control, less responsibility.", domain:"D3: Architecture"},
+  {term:"Micro-segmentation", def:"Fine-grained network segmentation at the workload level. Limits east-west (lateral) movement. Core Zero Trust principle. Implemented via SDN, firewalls between VMs.", domain:"D3: Architecture"},
+  {term:"RTO vs RPO", def:"RTO = Recovery Time Objective (how long until systems are back). RPO = Recovery Point Objective (maximum acceptable data loss measured in time). Lower both = more expensive.", domain:"D3: Architecture"},
+  {term:"Hot/Warm/Cold site", def:"Hot = fully operational, immediate failover. Warm = partially equipped, hours to activate. Cold = empty building, days/weeks to activate. Cost mirrors capability.", domain:"D3: Architecture"},
+  {term:"SDLC Security", def:"Security should be integrated throughout Software Development Life Cycle, not added at the end. DevSecOps = shift-left. Stages: Plan, Code, Build, Test, Deploy, Monitor.", domain:"D3: Architecture"},
+  {term:"Hypervisor Types", def:"Type 1 (bare metal): runs directly on hardware (VMware ESXi, Hyper-V, Xen). Type 2 (hosted): runs on top of OS (VirtualBox, VMware Workstation). Type 1 is more secure/efficient.", domain:"D3: Architecture"},
+  {term:"SASE (Secure Access Service Edge)", def:"Cloud-delivered architecture combining network and security functions (CASB, SWG, ZTNA, SD-WAN) into a unified service. Enables secure remote access. Zero Trust model.", domain:"D3: Architecture"},
+  // Domain 4
+  {term:"Incident Response Phases", def:"PICERL: Preparation → Identification → Containment → Eradication → Recovery → Lessons Learned. NIST also uses Preparation, Detection/Analysis, Containment/Eradication/Recovery, Post-incident.", domain:"D4: Operations"},
+  {term:"Order of Volatility", def:"Collect most volatile evidence first: CPU registers/cache → RAM/running processes → Swap/temp files → Hard disk data → Logs → Archived/backup media → Physical evidence.", domain:"D4: Operations"},
+  {term:"Chain of custody", def:"Documentation proving who collected, handled, and transferred evidence. Critical for admissibility in legal proceedings. Any gap can invalidate evidence.", domain:"D4: Operations"},
+  {term:"SIEM", def:"Security Information and Event Management. Aggregates and correlates logs from multiple sources. Provides real-time alerting, dashboards, forensic investigation. Examples: Splunk, QRadar, Microsoft Sentinel.", domain:"D4: Operations"},
+  {term:"SOAR", def:"Security Orchestration, Automation and Response. Automates repetitive security tasks and incident response playbooks. Integrates tools. Reduces time to respond. Works with SIEM.", domain:"D4: Operations"},
+  {term:"EDR (Endpoint Detection & Response)", def:"Continuously monitors endpoints for suspicious behavior. Records telemetry. Enables investigation and response. More capable than traditional AV. Examples: CrowdStrike Falcon, Microsoft Defender.", domain:"D4: Operations"},
+  {term:"DAC vs MAC vs RBAC", def:"DAC = owner sets permissions (Windows NTFS). MAC = system enforces labels (government classified). RBAC = permissions by job role (most common enterprise). ABAC = attribute-based (dynamic).", domain:"D4: Operations"},
+  {term:"Separation of duties", def:"Critical tasks divided among multiple people so no single person can commit fraud or error alone. Example: person who initiates wire transfer ≠ person who approves it.", domain:"D4: Operations"},
+  {term:"PAM (Privileged Access Management)", def:"Solutions to secure, manage, and monitor privileged accounts. Features: password vaulting, just-in-time access, session recording. Examples: CyberArk, BeyondTrust.", domain:"D4: Operations"},
+  {term:"DLP (Data Loss Prevention)", def:"Technology to detect and prevent unauthorized transmission of sensitive data. Monitors endpoints, network, cloud. Can block email with SSNs, credit cards, IP based on policies.", domain:"D4: Operations"},
+  {term:"Penetration testing types", def:"Black box = no prior knowledge (simulates external attacker). Gray box = partial knowledge (simulates insider). White box = full knowledge of systems (most thorough). All require WRITTEN authorization.", domain:"D4: Operations"},
+  {term:"Vulnerability scan vs Pen test", def:"Vuln scan = automated, non-intrusive, finds known vulnerabilities. Pen test = manual exploitation by human tester. Pen test goes further: verifies exploitability and business impact.", domain:"D4: Operations"},
+  {term:"Forensic copy (bit-for-bit)", def:"Exact duplicate of storage media, every bit including deleted files and slack space. Tools: dd, FTK Imager, EnCase. Hash both original and copy to verify integrity.", domain:"D4: Operations"},
+  {term:"3-2-1 Backup Rule", def:"Keep 3 copies of data, on 2 different storage media types, with 1 offsite. Modern variant adds +1: keep one offline (air-gapped) to protect against ransomware.", domain:"D4: Operations"},
+  {term:"Full vs Incremental vs Differential", def:"Full: backs up everything (slow backup, fast restore). Incremental: only changes since LAST backup of any type (fast backup, slow restore). Differential: changes since last FULL (moderate both).", domain:"D4: Operations"},
+  {term:"Threat hunting", def:"Proactive, human-led search for hidden threats in the environment. Assumes attackers are already inside. Uses hypothesis-driven investigation, TTP analysis, threat intelligence.", domain:"D4: Operations"},
+  {term:"NetFlow vs PCAP", def:"NetFlow = metadata only (src/dst IP, port, bytes, duration). No content. PCAP = full packet capture including payload. NetFlow: traffic analysis at scale. PCAP: deep forensic investigation.", domain:"D4: Operations"},
+  {term:"Crypto-shredding", def:"Destroying encryption keys rather than the data itself. Renders encrypted data permanently unreadable. Best practice for cloud and SSD storage where physical destruction is impractical.", domain:"D4: Operations"},
+  // Domain 5
+  {term:"Risk formula", def:"Risk = Likelihood × Impact. Quantitative: ALE = SLE × ARO, where SLE = AV × EF. Qualitative: use high/medium/low ratings. Both approaches valid on the exam.", domain:"D5: Governance"},
+  {term:"ALE, SLE, ARO", def:"SLE (Single Loss Expectancy) = Asset Value × Exposure Factor. ARO (Annual Rate of Occurrence) = how often per year. ALE (Annual Loss Expectancy) = SLE × ARO.", domain:"D5: Governance"},
+  {term:"Risk response strategies", def:"Avoid: stop the activity. Transfer: insurance/outsource. Mitigate: apply controls. Accept: acknowledge and do nothing. NEVER 'reject' risk (that's not a valid strategy).", domain:"D5: Governance"},
+  {term:"NIST CSF", def:"NIST Cybersecurity Framework. 5 functions: Identify, Protect, Detect, Respond, Recover. Voluntary framework for improving critical infrastructure security. Widely adopted.", domain:"D5: Governance"},
+  {term:"PCI-DSS", def:"Payment Card Industry Data Security Standard. Applies to anyone storing/processing/transmitting cardholder data. 12 requirements. Self-assessment or QSA audit depending on transaction volume.", domain:"D5: Governance"},
+  {term:"HIPAA", def:"Health Insurance Portability and Accountability Act. US law protecting Protected Health Information (PHI). Requires safeguards: admin, physical, technical. Applies to covered entities and business associates.", domain:"D5: Governance"},
+  {term:"GDPR", def:"General Data Protection Regulation. EU law. Applies to any org handling EU citizens' data. Rights: access, erasure, portability. Data breach notification within 72 hours. Heavy fines.", domain:"D5: Governance"},
+  {term:"Data Owner vs Custodian", def:"Data Owner = business role that determines classification and access rules (often executive). Data Custodian = IT role that implements and maintains protections. Owner = policy, Custodian = technical.", domain:"D5: Governance"},
+  {term:"PII vs PHI", def:"PII = Personally Identifiable Information (name, SSN, address, email). PHI = Protected Health Information (medical records + identifying info). PHI is a subset of PII, governed by HIPAA.", domain:"D5: Governance"},
+  {term:"Tokenization vs Encryption", def:"Tokenization: replaces sensitive data with a random token. Original data stored in separate vault. No mathematical link. Cannot be reversed without vault. Used in PCI. Encryption is reversible.", domain:"D5: Governance"},
+  {term:"Anonymization vs Pseudonymization", def:"Anonymization: permanently removes all identifying information. Irreversible. No longer covered by GDPR. Pseudonymization: replaces with alias. Reversible with key. Still covered by GDPR.", domain:"D5: Governance"},
+  {term:"Business continuity vs Disaster recovery", def:"BCP = Business Continuity Plan: keep the business running during disruption. DRP = Disaster Recovery Plan: restore IT systems after disruption. DRP is a subset of BCP.", domain:"D5: Governance"},
+  {term:"SLA, MOU, MOA, ISA", def:"SLA = Service Level Agreement (uptime guarantees, penalties). MOU = intent, non-binding. MOA = binding agreement. ISA = Interconnection Security Agreement (between orgs sharing a network connection).", domain:"D5: Governance"},
+  {term:"Security Policy hierarchy", def:"Policy (management intent) → Standard (mandatory requirements) → Procedure (step-by-step how-to) → Guideline (optional recommendations) → Baseline (minimum config).", domain:"D5: Governance"},
+  {term:"Supply chain risk", def:"Risk from third-party vendors, software, hardware. Examples: SolarWinds attack (malicious update). Mitigations: vendor risk assessments, security questionnaires, SBOM (Software Bill of Materials).", domain:"D5: Governance"},
+  {term:"Quantitative vs Qualitative risk", def:"Quantitative: uses numbers/money (ALE, ROI). Objective, comparable, time-consuming. Qualitative: uses ratings like high/medium/low. Subjective, faster, easier. Most orgs use both.", domain:"D5: Governance"},
+];
+
+let deck = [...ALL_CARDS];
+let current = 0;
+let flipped = false;
+let stats = {got: 0, hard: 0, wrong: 0};
+let ratings = {};
+let activeCategory = 'All';
+let filteredDeck = [...deck];
+
+function getCategories() {
+  const cats = ['All', ...new Set(ALL_CARDS.map(c => c.domain))];
+  return cats;
+}
+
+function buildCategoryFilter() {
+  const el = document.getElementById('catFilter');
+  getCategories().forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'cat-btn' + (cat === 'All' ? ' active' : '');
+    btn.textContent = cat;
+    btn.onclick = () => filterCategory(cat);
+    el.appendChild(btn);
+  });
+}
+
+function filterCategory(cat) {
+  activeCategory = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b.textContent === cat));
+  filteredDeck = cat === 'All' ? [...deck] : deck.filter(c => c.domain === cat);
+  current = 0;
+  stats = {got: 0, hard: 0, wrong: 0};
+  ratings = {};
+  updateStats();
+  showCard();
+}
+
+function shuffleCards() {
+  for (let i = filteredDeck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [filteredDeck[i], filteredDeck[j]] = [filteredDeck[j], filteredDeck[i]];
+  }
+  current = 0;
+  showCard();
+}
+
+function resetDeck() {
+  filteredDeck = activeCategory === 'All' ? [...ALL_CARDS] : ALL_CARDS.filter(c => c.domain === activeCategory);
+  deck = [...ALL_CARDS];
+  current = 0;
+  stats = {got: 0, hard: 0, wrong: 0};
+  ratings = {};
+  updateStats();
+  showCard();
+}
+
+function reviewWrong() {
+  const wrongCards = ALL_CARDS.filter((c, i) => ratings[c.term] === 'wrong' || ratings[c.term] === 'hard');
+  if (!wrongCards.length) { alert('No wrong or hard cards yet! Review some cards first.'); return; }
+  filteredDeck = wrongCards;
+  current = 0;
+  showCard();
+}
+
+function showCard() {
+  if (current >= filteredDeck.length) {
+    showDone();
+    return;
+  }
+  const card = filteredDeck[current];
+  document.getElementById('cardTerm').textContent = card.term;
+  document.getElementById('cardDef').textContent = card.def;
+  document.getElementById('cardDomain').textContent = card.domain;
+  flipped = false;
+  document.getElementById('cardInner').classList.remove('flipped');
+  document.getElementById('ratingBtns').classList.remove('show');
+  updateProgress();
+}
+
+function flipCard() {
+  if (current >= filteredDeck.length) return;
+  flipped = !flipped;
+  document.getElementById('cardInner').classList.toggle('flipped', flipped);
+  if (flipped) document.getElementById('ratingBtns').classList.add('show');
+}
+
+function rate(r) {
+  const card = filteredDeck[current];
+  if (ratings[card.term] && ratings[card.term] !== r) {
+    stats[ratings[card.term]]--;
+  }
+  if (!ratings[card.term] || ratings[card.term] !== r) {
+    ratings[card.term] = r;
+    stats[r]++;
+  }
+  updateStats();
+  current++;
+  setTimeout(showCard, 150);
+}
+
+function prevCard() {
+  if (current > 0) { current--; showCard(); }
+}
+
+function nextCard() {
+  current++;
+  showCard();
+}
+
+function updateProgress() {
+  const total = filteredDeck.length;
+  const pct = total ? (current / total) * 100 : 0;
+  document.getElementById('progFill').style.width = pct + '%';
+  document.getElementById('progText').textContent = `Card ${Math.min(current + 1, total)} of ${total}`;
+}
+
+function updateStats() {
+  document.getElementById('statGot').textContent = stats.got;
+  document.getElementById('statHard').textContent = stats.hard;
+  document.getElementById('statWrong').textContent = stats.wrong;
+}
+
+function showDone() {
+  document.getElementById('cardArea').innerHTML = `
+    <div class="card-face front" style="position:relative;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:30px;text-align:center;">
+      <div style="font-size:40px;margin-bottom:12px">✓</div>
+      <div style="font-size:22px;font-weight:700;color:var(--accent3);margin-bottom:8px">Deck Complete!</div>
+      <div style="color:var(--muted);font-size:14px;margin-bottom:16px">Got it: ${stats.got} &nbsp;|&nbsp; Hard: ${stats.hard} &nbsp;|&nbsp; Wrong: ${stats.wrong}</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+        <button class="btn primary" onclick="resetDeck()">Restart</button>
+        <button class="btn" onclick="reviewWrong()" style="border-color:var(--accent2);color:var(--accent2)">Review Wrong/Hard</button>
+      </div>
+    </div>`;
+}
+
+buildCategoryFilter();
+showCard();
+</script>
+</body>
+</html>
